@@ -1,0 +1,6 @@
+ed2a95192ad692966568cfde758d5129  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.bam
+f5e62b2ac5dae23e5c214aa10a78ce5a  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.tsv
+a6d0f62caaf033dd43506a1154600cb5  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.signal.all.minus.bigWig
+29bc6d3816ceed87461f080357e678a7  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.signal.all.plus.bigWig
+9c03fca9e38d84b89894d2938a0aedbd  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.signal.unique.minus.bigWig
+17f94646b3b0ab71fd68d64e448bd6ea  /share/samdata/sorenar/miRNA/pipeline/results/HepG2.1.test/HepG2.1.test.signal.unique.plus.bigWig
