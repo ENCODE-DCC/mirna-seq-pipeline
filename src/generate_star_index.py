@@ -12,6 +12,7 @@ import gzip
 import logging
 import os
 import shlex
+import shutil
 import subprocess
 import tarfile
 
@@ -29,15 +30,6 @@ filehandler.setFormatter(formatter)
 consolehandler.setFormatter(formatter)
 logger.addHandler(consolehandler)
 logger.addHandler(filehandler)
-
-STAR_COMMAND_TEMPLATE = '''STAR \
-    --runThreadN {ncpus} \
-    --runMode genomeGenerate \
-    --genomeDir out/ \
-    --sjdbGTFfile {annotation} \
-    --sjdbOverhang 1 \
-    --genomeFastaFiles {refgenome}
-'''
 
 
 def reset_tar_info(tarinfo):
@@ -62,12 +54,29 @@ def reset_tar_info(tarinfo):
 
 
 def make_tar_archive_from_dir(input_dir, output_filename, filter=None):
+    """Make tar archive from a directory with option to apply a filter.
+
+    Args:
+        input_dir: Path to directory to be archived e.g. ~/inputs
+        output_filename: filename where output archive is written to
+        filter: function that takes TarInfo object as an input and returns
+                a TarInfo object. If filter returns None instead the TarInfo
+                object will be excluded from the archive.
+    """
     with tarfile.open(output_filename, 'w') as out_tar:
         out_tar.add(input_dir, filter=filter)
     return None
 
 
-def compress_without_header(input_filename, output_filename):
+def compress_with_blank_header(input_filename, output_filename):
+    """Gzip file with blank header.
+
+    The mtime in the header is 0 and the filename is empty.
+
+    Args:
+        input_filename: Path to file to be compressed.
+        output_filename: Path to the compressed output.
+    """
     with open(output_filename, 'wb') as out_gz:
         with open(input_filename, 'rb') as src_file:
             with gzip.GzipFile('', 'wb', fileobj=out_gz, mtime=0) as gz_dest:
@@ -75,21 +84,44 @@ def compress_without_header(input_filename, output_filename):
     return None
 
 
-def call_star(ncpus, annotation, refgenome, outfile):
-    output_basename = os.path.splittext(outfile)[0]
+def make_star_index(ncpus, annotation, refgenome, outfile):
+    """Build index with STAR.
+
+    Args:
+        ncpus: Int number of threads
+        annotation: Path to annotation .gtf file
+        refgenome: Path to reference genome .fasta
+        outfile: Output filename for index tar.gz archive
+    """
+    STAR_COMMAND_TEMPLATE = '''STAR \
+    --runThreadN {ncpus} \
+    --runMode genomeGenerate \
+    --genomeDir out \
+    --sjdbGTFfile {annotation} \
+    --sjdbOverhang 1 \
+    --genomeFastaFiles {refgenome}
+    '''
     command = STAR_COMMAND_TEMPLATE.format(ncpus=ncpus, annotation=annotation,
                                            refgenome=refgenome)
+    logger.info('Creating temporary directory out/')
+    os.mkdir('out')
     logger.info('Running STAR command %s', command)
     subprocess.call(shlex.split(command))
-    output_tar = output_basename + '.tar'
+    logger.info('Index building success.')
+    output_tar = os.path.splitext(outfile)[0]
+    logger.info('Building tar archive %s', output_tar)
     make_tar_archive_from_dir('out', output_tar, reset_tar_info)
-    compress_without_header(output_tar, outfile)
+    logger.info('Compressing tar %s into %s', output_tar, outfile)
+    compress_with_blank_header(output_tar, outfile)
+    logger.info('Removing the uncompressed tar archive and temporary directory.')
+    os.remove(output_tar)
+    shutil.rmtree('out')
     return None
 
 
 def main(args):
-    call_star(args.ncpus, args.annotation_file, args.genome_file,
-              args.output_file)
+    make_star_index(args.ncpus, args.annotation_file, args.genome_file,
+                    args.output_file)
     with open('staridx_test2.tar.gz', 'wb') as out_gz:
         with open('staridx_test2.tar', 'rb') as src_tar:
             with gzip.GzipFile('', 'wb', fileobj=out_gz, mtime=0) as gz_dest:
@@ -107,5 +139,5 @@ if __name__ == '__main__':
                         help='Basename for the output. Format is gzipped tar (tar.gz or .tgz are the recommended suffixes).')
     args = parser.parse_args()
 
-    call_star(args.ncpus, args.annotation_file, args.genome_file,
-              args.output_file)
+    make_star_index(args.ncpus, args.annotation_file, args.genome_file,
+                    args.output_file)
