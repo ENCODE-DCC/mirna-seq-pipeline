@@ -136,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('--genome_file', type=str,
                         help='Filename for reference genome .fasta')
     parser.add_argument('--output_file', type=str, 
-                        help='Basename for the output. Format is gzipped tar (tar.gz or .tgz are the recommended suffixes).')
+                        help='Filename for the output. Format is gzipped tar (tar.gz or .tgz are the recommended suffixes).')
     args = parser.parse_args()
 
     make_star_index(args.ncpus, args.annotation_file, args.genome_file,

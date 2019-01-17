@@ -3,9 +3,9 @@ FROM ubuntu:16.04
 MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
-	python3-dev \
-	python3-pip \
-	wget
+    python3-dev \
+    python3-pip \
+    wget
 RUN mkdir /software
 WORKDIR /software
 ENV PATH="/software:${PATH}"
@@ -24,5 +24,9 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/wigToBigWig && ch
 
 # Install cutadapt 1.7.1
 RUN pip3 install cutadapt==1.7.1
+
+RUN mkdir -p mirna-seq-pipeline/src
+COPY /src mirna-seq-pipeline/src
+ENV PATH="/software/mirna-seq-pipeline/src:${PATH}"
 
 ENTRYPOINT ["/bin/bash", "-c"]
