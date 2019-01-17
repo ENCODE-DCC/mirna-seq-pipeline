@@ -26,7 +26,7 @@ workflow generate_STAR_index {
     call generate_index { input:
         genome_file = reference_sequence,
         annotation_file = annotation,
-        output_filename = output_file,
+        output_file = output_filename,
         ncpus = ncpus,
         ramGB = ramGB,
         disks = disks,
