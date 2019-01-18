@@ -51,6 +51,7 @@ task generate_index {
 
     output {
         File star_index = glob(output_file)[0]
+        File star_log = glob("generate_star_index.log")[0]
     }
 
     runtime {
