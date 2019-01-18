@@ -47,11 +47,13 @@ task cutadapt {
     String disk
 
     command {
-
+        cutadapt -a file:three_prime_adapters -e 0.25 --match-read-wildcards \
+            --untrimmed-output=${output_prefix + "_NO3AD.fastq"} -o ${output_prefix + "trimmed.fastq"} ${fastq} 
     }
 
     output {
-
+        no3ad_untrimmed_fastq = glob("*_NO3AD.fastq")[0]
+        trimmed = glob("*trimmed.fastq")[0]
     }
 
     runtime {
