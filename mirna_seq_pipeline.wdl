@@ -3,6 +3,8 @@
 
 workflow mirna_seq_pipeline {
     #File inputs
+
+    #cutadapt
     #Array containing the input fastq files
     Array[File] fastqs
 
@@ -11,16 +13,29 @@ workflow mirna_seq_pipeline {
     
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
+    
+    #star
+    #tar.gz archive that contains star index
+    File star_index
 
+    #micro-rna annotations
+    File mirna_annotation
+
+    #common
     #Prefix for outputs (additionally replicate number will be added)
     String experiment_prefix
 
     #Resources
 
-    #Cutadapt
+    #cutadapt
     Int cutadapt_ncpus
     Int cutadapt_ramGB
     String cutadapt_disk
+
+    #star
+    Int star_ncpus
+    Int star_ramGB
+    String star_disk
 
     scatter (i in range(length(fastqs))) {
         call cutadapt { input:
@@ -32,6 +47,16 @@ workflow mirna_seq_pipeline {
             ramGB = cutadapt_ramGB,
             disk = cutadapt_disk,
         }
+
+        call star { input:
+            fastq = cutadapt.trimmed_fastq,
+            index = star_index,
+            annotation = mirna_annotation,
+            output_prefix = "rep"+(i+1)+experiment_prefix,
+            ncpus = star_ncpus,
+            ramGB = star_ramGB,
+            disk = star_disk
+            }
     }
 }
 
@@ -71,6 +96,52 @@ task cutadapt {
         File no5ad_untrimmed_fastq = glob("*_NO5AD.fastq")[0]
         File too_short_fastq = glob("*_SHORT_FAIL.fastq")[0]
         File trimmed_fastq = glob("*_trim.fastq")[0]
+    }
+
+    runtime {
+        cpu: ncpus
+        memory: "${ramGB} GB"
+        disks: disk
+    }
+}
+
+task star {
+    File fastq
+    File index
+    File annotation
+    String output_prefix
+    Int ncpus
+    Int ramGB
+    String disk
+
+    command {
+        tar -xzvf ${index}
+        STAR \
+            --genomeDir out \
+            --readFilesIn ${fastq} \
+            --sjdbGTFfile ${annotation} \
+            --runThreadN ${ncpus} \
+            --alignEndsType EndToEnd \
+            --outFilterMismatchNmax 1 \
+            --outFilterMultimapScoreRange 0 \
+            --quantMode TranscriptomeSAM GeneCounts \
+            --outReadsUnmapped Fastx \
+            --outSAMtype BAM SortedByCoordinate \
+            --outFilterMultimapNmax 10 \
+            --outSAMunmapped Within \
+            --outFilterScoreMinOverLread 0 \
+            --outFilterMatchNminOverLread 0 \
+            --outFilterMatchNmin 16 \
+            --alignSJDBoverhangMin 1000 \
+            --alignIntronMax 1 \
+            --outWigType wiggle \
+            --outWigStrand Stranded \
+            --outWigNorm RPM
+    }
+
+    output {
+        File bam = glob("Aligned.sortedByCoord.out.bam")[0]
+        File tsv = glob("ReadsPerGene.out.tab")[0]
     }
 
     runtime {
