@@ -5,7 +5,8 @@ MAINTAINER Otto Jolanki
 RUN apt-get update && apt-get install -y \
     python3-dev \
     python3-pip \
-    wget
+    wget \
+    libkrb5-3
 RUN mkdir /software
 WORKDIR /software
 ENV PATH="/software:${PATH}"
