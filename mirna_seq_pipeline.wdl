@@ -137,11 +137,14 @@ task star {
             --outWigType wiggle \
             --outWigStrand Stranded \
             --outWigNorm RPM
+        mv Aligned.sortedByCoord.out.bam ${output_prefix}.bam
+        mv ReadsPerGene.out.tab ${output_prefix}.tsv
+
     }
 
     output {
-        File bam = glob("Aligned.sortedByCoord.out.bam")[0]
-        File tsv = glob("ReadsPerGene.out.tab")[0]
+        File bam = glob("${output_prefix}.bam")[0]
+        File tsv = glob("*.tsv")[0]
     }
 
     runtime {
