@@ -197,10 +197,10 @@ task wigtobigwig {
     }
 
     output {
-        File plus_strand_all_bigwig = glob(".signal.all.plus.bigWig")[0]
-        File minus_strand_all_bigwig = glob(".signal.all.minus.bigWig")[0]
-        File plus_strand_unique_bigwig = glob(".signal.unique.plus.bigWig")[0]
-        File minus_strand_unique_bigwig = glob(".signal.unique.minus.bigWig")[0]
+        File plus_strand_all_bigwig = glob("*.signal.all.plus.bigWig")[0]
+        File minus_strand_all_bigwig = glob("*.signal.all.minus.bigWig")[0]
+        File plus_strand_unique_bigwig = glob("*.signal.unique.plus.bigWig")[0]
+        File minus_strand_unique_bigwig = glob("*.signal.unique.minus.bigWig")[0]
     }
 
     runtime {
