@@ -1,0 +1,6 @@
+{
+    "TEST_CUTADAPT_NO5AD.fastq" : "d41d8cd98f00b204e9800998ecf8427e",
+    "TEST_CUTADAPT_NO3AD.fastq" : "828ebc177e46fe6ee2afdfde58921b32",
+    "TEST_CUTADAPT_trim.fastq" : "a78444b1ad3e92605489eceb47186e6f",
+    "TEST_CUTADAPT_SHORT_FAIL.fastq" : "87a45f7bd5452d76a1d5763c00ad3265"
+}

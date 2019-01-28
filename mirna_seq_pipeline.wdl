@@ -209,21 +209,3 @@ task wigtobigwig {
         disks: disk
     }
 }
-
-task bamtosam {
-    File bamfile
-
-    command {
-        samtools view ${bamfile} > ${bamfile%.bam}.sam
-    }
-
-    output {
-        File samfile = glob("*.sam")[0]
-    }
-
-    runtime {
-        cpu: 2
-        memory "2 GB"
-        disks: "local disk 20 HDD"
-    }
-}

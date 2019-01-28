@@ -64,9 +64,50 @@ jobs:
             docker logout
           no_output_timeout: 30m
 
+  test_cutadapt_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: 
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
+            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
+            --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
+            cat test_cutadapt_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
+          no_output_timeout: 30m
+
+  test_cutadapt_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *install_singularity
+      - run: *make_tag
+      - run: 
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
+            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
+            --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
+            cat test_cutadapt_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
   version: 2
   build_workflow:
     jobs:
       - build
+      - test_cutadapt_docker:
+          requires:
+            - build
+      - test_cutadapt_singularity:
+          requires:
+            - build
