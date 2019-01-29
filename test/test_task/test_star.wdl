@@ -11,11 +11,19 @@ workflow test_star {
     Int ramGB
     String disk
 
-    call mirna.star {input:
+    call mirna.star { input:
         fastq = fastq,
         index = index,
         annotation = mirna_annotation,
         output_prefix = output_prefix,
+        ncpus = ncpus,
+        ramGB = ramGB,
+        disk = disk
+    }
+
+    call mirna.bamtosam { input:
+        bamfile = star.bam,
+        output_sam = output_prefix + ".sam",
         ncpus = ncpus,
         ramGB = ramGB,
         disk = disk

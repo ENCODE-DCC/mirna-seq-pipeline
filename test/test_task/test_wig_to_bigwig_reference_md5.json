@@ -1,0 +1,6 @@
+{
+    "TEST_WIGTOBIGWIG.signal.all.plus.bigWig" : "29bc6d3816ceed87461f080357e678a7",
+    "TEST_WIGTOBIGWIG.signal.all.minus.bigWig" : "a6d0f62caaf033dd43506a1154600cb5",
+    "TEST_WIGTOBIGWIG.signal.unique.plus.bigWig" : "17f94646b3b0ab71fd68d64e448bd6ea",
+    "TEST_WIGTOBIGWIG.signal.unique.minus.bigWig" : "9c03fca9e38d84b89894d2938a0aedbd"
+}
