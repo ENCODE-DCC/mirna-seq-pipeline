@@ -180,6 +180,51 @@ jobs:
             cat test_wigtobigwig_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
 
+  test_workflow_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
+            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
+            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
+            mirna_seq_pipeline.star.minus_strand_all_wig mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
+            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq mirna_seq_pipeline.star.plus_strand_all_wig \
+            --metadata_json test_workflow_input.metadata.json \
+            --reference_json test/test_workflow/test_workflow_reference_md5.json \
+            --outfile test_workflow_input.result.json
+            cat test_workflow_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_input.result.json
+
+  test_workflow_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *install_singularity
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
+            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
+            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
+            mirna_seq_pipeline.star.minus_strand_all_wig mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
+            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq mirna_seq_pipeline.star.plus_strand_all_wig \
+            --metadata_json test_workflow_input.metadata.json \
+            --reference_json test/test_workflow/test_workflow_reference_md5.json \
+            --outfile test_workflow_input.result.json
+            cat test_workflow_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_input.result.json
+
 # Workflow
 workflows:
   version: 2
@@ -202,5 +247,11 @@ workflows:
           requires:
             - build
       - test_wigtobigwig_singularity:
+          requires:
+            - build
+      - test_workflow_docker:
+          requires:
+            - build
+      - test_workflow_singularity:
           requires:
             - build
