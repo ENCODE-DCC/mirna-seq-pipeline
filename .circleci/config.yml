@@ -143,6 +143,43 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_star_input.result.json
           no_output_timeout: 30m
 
+  test_wigtobigwig_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
+            test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
+            test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
+            --metadata_json test_wigtobigwig_input.metadata.json \
+            --reference_json test/test_task/test_wigtobigwig_reference_md5.json --outfile test_wigtobigwig_input.result.json
+            cat test_wigtobigwig_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
+
+  test_wigtobigwig_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *install_singularity
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
+            test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
+            test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
+            --metadata_json test_wigtobigwig_input.metadata.json \
+            --reference_json test/test_task/test_wigtobigwig_reference_md5.json --outfile test_wigtobigwig_input.result.json
+            cat test_wigtobigwig_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
+
 # Workflow
 workflows:
   version: 2
@@ -159,5 +196,11 @@ workflows:
           requires:
             - build
       - test_star_singularity:
+          requires:
+            - build
+      - test_wigtobigwig_docker:
+          requires:
+            - build
+      - test_wigtobigwig_singularity:
           requires:
             - build
