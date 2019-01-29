@@ -192,7 +192,7 @@ task wigtobigwig {
     command {
         wigToBigWig ${plus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.plus.bigWig
         wigToBigWig ${minus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.minus.bigWig
-        wigToBigWig ${minus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.plus.bigWig
+        wigToBigWig ${plus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.plus.bigWig
         wigToBigWig ${minus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.minus.bigWig
     }
 
@@ -201,6 +201,28 @@ task wigtobigwig {
         File minus_strand_all_bigwig = glob("*.signal.all.minus.bigWig")[0]
         File plus_strand_unique_bigwig = glob("*.signal.unique.plus.bigWig")[0]
         File minus_strand_unique_bigwig = glob("*.signal.unique.minus.bigWig")[0]
+    }
+
+    runtime {
+        cpu: ncpus
+        memory: "${ramGB} GB"
+        disks: disk
+    }
+}
+
+task bamtosam {
+    File bamfile
+    String output_sam
+    Int ncpus
+    Int ramGB
+    String disk
+
+    command {
+        samtools view ${bamfile} > ${output_sam}
+    }
+
+    output {
+        File samfile = glob("${output_sam}")[0]
     }
 
     runtime {
