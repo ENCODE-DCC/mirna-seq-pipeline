@@ -24,6 +24,11 @@ make_tag: &make_tag
   command: |
     echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
+get_star_index: &get_star_index
+  name: get star index for test
+  command: |
+    curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+
 install_singularity: &install_singularity
   name: install singularity
   command: |
@@ -99,6 +104,24 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
           no_output_timeout: 30m
 
+  test_star_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
+            test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv --metadata_json test_star_input.metadata.json \
+            --reference_json test/test_task/test_star_reference_md5.json --outfile test_star_input.result.json
+            cat test_star_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_star_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
   version: 2
@@ -109,5 +132,8 @@ workflows:
           requires:
             - build
       - test_cutadapt_singularity:
+          requires:
+            - build
+      - test_star_docker:
           requires:
             - build
