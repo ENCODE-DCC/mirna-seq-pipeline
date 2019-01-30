@@ -119,15 +119,6 @@ def make_star_index(ncpus, annotation, refgenome, outfile):
     return None
 
 
-def main(args):
-    make_star_index(args.ncpus, args.annotation_file, args.genome_file,
-                    args.output_file)
-    with open('staridx_test2.tar.gz', 'wb') as out_gz:
-        with open('staridx_test2.tar', 'rb') as src_tar:
-            with gzip.GzipFile('', 'wb', fileobj=out_gz, mtime=0) as gz_dest:
-                gz_dest.writelines((line for line in src_tar))
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ncpus', type=int, help='Number of threads')
