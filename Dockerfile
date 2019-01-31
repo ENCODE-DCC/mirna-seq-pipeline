@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     libkrb5-3 \
     git \
+    pigz \
     #samtools dependencies
     libbz2-dev \
     libncurses5-dev 
