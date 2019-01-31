@@ -1,6 +1,6 @@
 {
     "mirna_seq_pipeline.fastqs" : ["test_data/data/HepG2.1.test.fastq"],
-    "mirna_seq_pipeline.five_prime_adapters" : "adapters/five_prime_adapter_set1.fasta",
+    "mirna_seq_pipeline.five_prime_adapters" : ["adapters/five_prime_adapter_set1.fasta"],
     "mirna_seq_pipeline.three_prime_adapters" : "adapters/three_prime_adapter.fasta",
     "mirna_seq_pipeline.star_index" : "test_data/refs/star_index_mirna_chr19.tar.gz",
     "mirna_seq_pipeline.mirna_annotation" : "test_data/refs/test.chr19.miRNA.gtf",
