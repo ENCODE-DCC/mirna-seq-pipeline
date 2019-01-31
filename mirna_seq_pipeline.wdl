@@ -7,7 +7,7 @@ workflow mirna_seq_pipeline {
     #cutadapt
     #Array containing the input fastq files
     Array[File] fastqs
-    #Fasta file with 5' adapter sequence(s)
+    #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
     Array[File] five_prime_adapters 
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
