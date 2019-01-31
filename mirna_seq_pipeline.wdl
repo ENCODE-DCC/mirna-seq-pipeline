@@ -7,8 +7,8 @@ workflow mirna_seq_pipeline {
     #cutadapt
     #Array containing the input fastq files
     Array[File] fastqs
-    #Fasta file with 5' adapter sequence(s)
-    File five_prime_adapters 
+    #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
+    Array[File] five_prime_adapters 
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
     
@@ -48,7 +48,7 @@ workflow mirna_seq_pipeline {
     scatter (i in range(length(fastqs))) {
         call cutadapt { input:
             fastq = fastqs[i],
-            five_prime_adapters = five_prime_adapters,
+            five_prime_adapters = five_prime_adapters[i],
             three_prime_adapters = three_prime_adapters,
             output_prefix = "rep"+(i+1)+experiment_prefix,
             ncpus = cutadapt_ncpus,
