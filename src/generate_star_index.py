@@ -79,7 +79,7 @@ def compress_with_pigz(input_filename, output_filename, ncpus):
     command = 'pigz -c -n -p {ncpus} {input}'.format(
         ncpus=ncpus, input=input_filename)
     with open(output_filename, 'w') as f:
-        subprocess.call(shlex.split(command, stdout=f))
+        subprocess.call(shlex.split(command), stdout=f)
     return None
 
 
