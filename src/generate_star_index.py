@@ -68,19 +68,18 @@ def make_tar_archive_from_dir(input_dir, output_filename, filter=None):
     return None
 
 
-def compress_with_blank_header(input_filename, output_filename):
-    """Gzip file with blank header.
-
-    The mtime in the header is 0 and the filename is empty.
+def compress_with_pigz(input_filename, output_filename, ncpus):
+    """Run subprocess call to pigz.
 
     Args:
-        input_filename: Path to file to be compressed.
-        output_filename: Path to the compressed output.
+        input_filename
+        output_filename
+        ncpus
     """
-    with open(output_filename, 'wb') as out_gz:
-        with open(input_filename, 'rb') as src_file:
-            with gzip.GzipFile('', 'wb', fileobj=out_gz, mtime=0) as gz_dest:
-                gz_dest.writelines((line for line in src_file))
+    command = 'pigz -c -n -p {ncpus} {input}'.format(
+        ncpus=ncpus, input=input_filename)
+    with open(output_filename, 'w') as f:
+        subprocess.call(shlex.split(command, stdout=f))
     return None
 
 
@@ -101,8 +100,8 @@ def make_star_index(ncpus, annotation, refgenome, outfile):
     --sjdbOverhang 1 \
     --genomeFastaFiles {refgenome}
     '''
-    command = STAR_COMMAND_TEMPLATE.format(ncpus=ncpus, annotation=annotation,
-                                           refgenome=refgenome)
+    command = STAR_COMMAND_TEMPLATE.format(
+        ncpus=ncpus, annotation=annotation, refgenome=refgenome)
     logger.info('Creating temporary directory out/')
     os.mkdir('out')
     logger.info('Running STAR command %s', command)
@@ -112,8 +111,9 @@ def make_star_index(ncpus, annotation, refgenome, outfile):
     logger.info('Building tar archive %s', output_tar)
     make_tar_archive_from_dir('out', output_tar, reset_tar_info)
     logger.info('Compressing tar %s into %s', output_tar, outfile)
-    compress_with_blank_header(output_tar, outfile)
-    logger.info('Removing the uncompressed tar archive and temporary directory.')
+    compress_with_pigz(output_tar, outfile, ncpus)
+    logger.info(
+        'Removing the uncompressed tar archive and temporary directory.')
     os.remove(output_tar)
     shutil.rmtree('out')
     return None
@@ -122,12 +122,16 @@ def make_star_index(ncpus, annotation, refgenome, outfile):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ncpus', type=int, help='Number of threads')
-    parser.add_argument('--annotation_file', type=str,
-                        help='Filename for annotation .gtf')
-    parser.add_argument('--genome_file', type=str,
-                        help='Filename for reference genome .fasta')
-    parser.add_argument('--output_file', type=str, 
-                        help='Filename for the output. Format is gzipped tar (tar.gz or .tgz are the recommended suffixes).')
+    parser.add_argument(
+        '--annotation_file', type=str, help='Filename for annotation .gtf')
+    parser.add_argument(
+        '--genome_file', type=str, help='Filename for reference genome .fasta')
+    parser.add_argument(
+        '--output_file',
+        type=str,
+        help=
+        'Filename for the output. Format is gzipped tar (tar.gz or .tgz are the recommended suffixes).'
+    )
     args = parser.parse_args()
 
     make_star_index(args.ncpus, args.annotation_file, args.genome_file,
