@@ -1,6 +1,6 @@
 {
     "test_cutadapt.fastq" : "test_data/data/HepG2.1.test.fastq",
-    "test_cutadapt.five_prime_adapters" : ["adapters/five_prime_adapter_set1.fasta"],
+    "test_cutadapt.five_prime_adapters" : "adapters/five_prime_adapter_set1.fasta",
     "test_cutadapt.three_prime_adapters" : "adapters/three_prime_adapter.fasta",
     "test_cutadapt.output_prefix" : "TEST_CUTADAPT",
     "test_cutadapt.ncpus" : 1,
