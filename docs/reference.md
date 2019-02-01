@@ -18,6 +18,14 @@ The pipeline docker image is based on [Ubuntu base image](https://hub.docker.com
 
 Python parts of the pipeline are run using [Python 3.5.2](https://www.python.org/download/releases/3.5.2/) that ships with Ubuntu 16.04.
 
+### Cutadapt 1.7.1
+
+For trimming the adapters we use [cutadapt version 1.7.1](https://cutadapt.readthedocs.io/en/stable/).
+
+### WigtoBigWig
+
+Conversion from .wig format to .bigWig format is done using WigToBigWig, downloaded from [here](http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/wigToBigWig).
+
 ### STAR 2.5.1b
 
 Alignment, quantitation and generation of the .wig files is done using [STAR 2.5.1b](https://github.com/alexdobin/STAR/releases/tag/2.5.1b). For detailed description of the software see [Article by Dobin et al](https://www.ncbi.nlm.nih.gov/pubmed/23104886). Multiple versions of the software have been released since writing the article.
