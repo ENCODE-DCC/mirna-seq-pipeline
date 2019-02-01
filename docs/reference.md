@@ -20,7 +20,7 @@ Python parts of the pipeline are run using [Python 3.5.2](https://www.python.org
 
 ### Cutadapt 1.7.1
 
-For trimming the adapters we use [cutadapt version 1.7.1](https://cutadapt.readthedocs.io/en/stable/).
+For trimming the adapters we use [cutadapt version 1.7.1](https://cutadapt.readthedocs.io/en/stable/). For publication detailing the software, see [Article by Marcel Martin](http://journal.embnet.org/index.php/embnetjournal/article/view/200).
 
 ### WigtoBigWig
 
