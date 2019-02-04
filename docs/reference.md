@@ -82,3 +82,26 @@ Following inputs define the computational resources given to the pipeline tasks.
 * `mirna_seq_pipeline.wigtobigwig_disk` Is the amount of disk space in gigabytes to the wigtobigwig task.
 
 ## Outputs
+
+#### Task Cutadapt
+
+* `no3ad_untrimmed_fastq` .fastq with the reads in which the 3' adapter was not found.
+* `no5ad_untrimmed_fastq` .fastq with the reads in which the 5' adapter was not found.
+* `too_short_fastq` .fastq with the reads that are too short.
+* `trimmed_fastq` .fastq with successfully trimmed reads.
+
+#### Task Star
+
+* `bam` .bam with the alignments
+* `tsv` .tsv with quantitations
+* `plus_strand_all_wig` Wiggle from all plus strand reads. Intermediate file used for signal track generation.
+* `minus_strand_all_wig` Wiggle from all minus strand reads. Intermediate file used for signal track generation.
+* `plus_strand_unique_wig` Wiggle from uniquely mapping plus strand reads. Intermediate file used for signal track generation.
+* `minus_strand_unique_wig` Wiggle from uniquely mapping minus strand reads. Intermediate file used for signal track generation.
+
+#### Task WigToBigWig
+
+* `plus_strand_all_bigwig` Signal track (bigwig) from all plus strand reads.
+* `minus_strand_all_bigwig` Signal track (bigwig) from all minus strand reads.
+* `plus_strand_unique_bigwig` Signal track (bigwig) from uniquely mapping plus strand reads.
+* `minus_strand_unique_bigwig` Signal track (bigwig) from uniquely mapping minus strand reads.
