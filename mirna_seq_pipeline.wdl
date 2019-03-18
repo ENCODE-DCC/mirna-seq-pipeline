@@ -172,7 +172,7 @@ task star {
         File minus_strand_all_wig = glob("Signal.UniqueMultiple.str2.out.wig")[0]
         File plus_strand_unique_wig = glob("Signal.Unique.str1.out.wig")[0]
         File minus_strand_unique_wig = glob("Signal.Unique.str2.out.wig")[0]
-        File star_log = glob("*_star_qc.json")[0]
+        File star_qc_json = glob("*_star_qc.json")[0]
         File star_qc_log = glob("star_qc.log")[0]
     }
 
