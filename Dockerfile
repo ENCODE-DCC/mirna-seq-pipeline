@@ -42,9 +42,9 @@ RUN git clone --branch 1.9 --single-branch https://github.com/samtools/samtools.
 
 RUN pip3 install qc-utils==0.1.1
 
-# Install pandas
+# Install pandas and scipy
 
-RUN pip3 install pandas
+RUN pip3 install pandas scipy
 
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src

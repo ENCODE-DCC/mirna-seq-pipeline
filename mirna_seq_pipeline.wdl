@@ -78,6 +78,14 @@ workflow mirna_seq_pipeline {
             disk = wigtobigwig_disk,
         }
     }
+
+    #If there are exactly two replicates, calculate spearman correlation between quants in replicates
+    if (length(fastqs) == 2) {
+        call spearman_correlation { input:
+            quants = star.tsv,
+            output_filename = experiment_prefix+"_spearman.json",
+            }
+    }
 }
 
 #Task definitions
@@ -212,6 +220,25 @@ task wigtobigwig {
         cpu: ncpus
         memory: "${ramGB} GB"
         disks: disk
+    }
+}
+
+task spearman_correlation {
+    Array[File] quants
+    String output_filename
+
+    command {
+        python3 $(which calculate_correlation.py) --quants ${sep=' ' quants} --output_filename ${output_filename}
+    }
+
+    output {
+        File spearman_json = glob("*spearman.json")[0]
+    }
+
+    runtime {
+        cpu: 1
+        memory: "2 GB"
+        disks: "local-disk 20"
     }
 }
 
