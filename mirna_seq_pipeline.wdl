@@ -159,7 +159,10 @@ task star {
             --outWigNorm RPM
         mv Aligned.sortedByCoord.out.bam ${output_prefix}.bam
         mv ReadsPerGene.out.tab ${output_prefix}.tsv
-
+        mv Log.final.out ${output_prefix}.Log.final.out
+        python3  $(which make_star_qc.py) --quants ${output_prefix}.tsv \
+                                          --star_log ${output_prefix}.Log.final.out \
+                                          --output_filename ${output_prefix}_star_qc.json
     }
 
     output {
@@ -169,6 +172,8 @@ task star {
         File minus_strand_all_wig = glob("Signal.UniqueMultiple.str2.out.wig")[0]
         File plus_strand_unique_wig = glob("Signal.Unique.str1.out.wig")[0]
         File minus_strand_unique_wig = glob("Signal.Unique.str2.out.wig")[0]
+        File star_log = glob("*_star_qc.json")[0]
+        File star_qc_log = glob("star_qc.log")[0]
     }
 
     runtime {
