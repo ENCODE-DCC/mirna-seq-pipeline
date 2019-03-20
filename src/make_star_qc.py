@@ -29,13 +29,21 @@ logger.addHandler(filehandler)
 def main(args):
     logger.info('Reading input tsv: %s' % args.quants)
     quants_tsv = pd.read_csv(args.quants, sep='\t', header=None, skiprows=4)
+    # calculate number of mirnas expressed at cpm>2
     per_million = quants_tsv[1].sum() / 1000000
     quants_tsv['cpm'] = quants_tsv[1] / per_million
     cpm_gte2 = sum(quants_tsv['cpm'] >= 2)
     star_qc_record = QCMetricRecord()
-    cpm_metric = QCMetric('cpm_gte2', {'cpm_greater_than_or_equal_to_2': cpm_gte2})
+    cpm_metric = QCMetric('cpm_gte2',
+                          {'cpm_greater_than_or_equal_to_2': cpm_gte2})
+    # get metrics from star log
     star_qc = QCMetric('star_qc_metric', args.star_log, parse_starlog)
     star_qc_record.add_all([cpm_metric, star_qc])
+    # calculate number of reads (unique + multimapping)
+    reads_mapped = int(star_qc.content['Uniquely mapped reads number']) + int(
+        star_qc.content['Number of reads mapped to multiple loci'])
+    reads_mapped_qc = QCMetric('number_of_mapped_reads', {'number_of_mapped_reads': reads_mapped})
+    star_qc_record.add(reads_mapped_qc)
     logger.info('Writing output json %s' % args.output_filename)
     with open(args.output_filename, 'w') as fp:
         json.dump(star_qc_record.to_ordered_dict(), fp)
@@ -43,8 +51,20 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--quants', type=str, required=True, help='Tab separated file containing quantitations.')
-    parser.add_argument('--star_log', type=str, required=True, help='STAR Log.final.out ending log file.')
-    parser.add_argument('--output_filename', type=str, required=True, help='Name of the final qc json file')
+    parser.add_argument(
+        '--quants',
+        type=str,
+        required=True,
+        help='Tab separated file containing quantitations.')
+    parser.add_argument(
+        '--star_log',
+        type=str,
+        required=True,
+        help='STAR Log.final.out ending log file.')
+    parser.add_argument(
+        '--output_filename',
+        type=str,
+        required=True,
+        help='Name of the final qc json file')
     args = parser.parse_args()
     main(args)
