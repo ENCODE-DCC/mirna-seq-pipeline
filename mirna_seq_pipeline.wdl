@@ -238,7 +238,7 @@ task spearman_correlation {
     runtime {
         cpu: 1
         memory: "2 GB"
-        disks: "local-disk 20"
+        disks: "local-disk 20 SSD"
     }
 }
 
