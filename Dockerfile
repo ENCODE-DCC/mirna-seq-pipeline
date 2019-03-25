@@ -38,6 +38,14 @@ RUN git clone --branch 1.9 --single-branch https://github.com/samtools/samtools.
     git clone --branch 1.9 --single-branch git://github.com/samtools/htslib.git && \
     cd samtools && make && make install && cd ../ && rm -rf samtools* htslib*
 
+# Install qc-utils 0.1.1
+
+RUN pip3 install qc-utils==0.1.1
+
+# Install pandas and scipy
+
+RUN pip3 install pandas scipy
+
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
 ENV PATH="/software/mirna-seq-pipeline/src:${PATH}"
