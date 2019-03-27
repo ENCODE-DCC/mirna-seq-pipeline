@@ -34,15 +34,15 @@ def main(args):
     quants_tsv['cpm'] = quants_tsv[1] / per_million
     cpm_gte2 = sum(quants_tsv['cpm'] >= 2)
     star_qc_record = QCMetricRecord()
-    cpm_metric = QCMetric('cpm_gte2',
-                          {'cpm_greater_than_or_equal_to_2': cpm_gte2})
+    cpm_metric = QCMetric('expressed_mirnas',
+                          {'expressed_mirnas': cpm_gte2})
     # get metrics from star log
     star_qc = QCMetric('star_qc_metric', args.star_log, parse_starlog)
     star_qc_record.add_all([cpm_metric, star_qc])
     # calculate number of reads (unique + multimapping)
     reads_mapped = int(star_qc.content['Uniquely mapped reads number']) + int(
         star_qc.content['Number of reads mapped to multiple loci'])
-    reads_mapped_qc = QCMetric('number_of_mapped_reads', {'number_of_mapped_reads': reads_mapped})
+    reads_mapped_qc = QCMetric('aligned_reads', {'aligned_reads': reads_mapped})
     star_qc_record.add(reads_mapped_qc)
     logger.info('Writing output json %s' % args.output_filename)
     with open(args.output_filename, 'w') as fp:
