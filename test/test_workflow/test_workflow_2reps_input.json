@@ -3,7 +3,7 @@
     "mirna_seq_pipeline.five_prime_adapters" : ["adapters/five_prime_adapter_set3.fasta", "adapters/five_prime_adapter_set4.fasta"],
     "mirna_seq_pipeline.three_prime_adapters" : "adapters/three_prime_adapter.fasta",
     "mirna_seq_pipeline.star_index" : "test_data/refs/star_index_mirna_chr19.tar.gz",
-    "mirna_seq_pipeline.mirna_annotation" : "test_data/refs/test.chr19.miRNA.gtf",
+    "mirna_seq_pipeline.mirna_annotation" : "test_data/refs/test.chr19.miRNA.gtf.gz",
     "mirna_seq_pipeline.chrom_sizes" : "test_data/refs/test.chrom.sizes.tsv",
     "mirna_seq_pipeline.experiment_prefix" : "TEST_WORKFLOW_2REPS",
     "mirna_seq_pipeline.cutadapt_ncpus" : 1,

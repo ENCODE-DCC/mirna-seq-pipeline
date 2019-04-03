@@ -1,7 +1,7 @@
 {
     "test_star.fastq" : "test_data/data/HepG2.1.test_trim.fastq",
     "test_star.index" : "test_data/refs/star_index_mirna_chr19.tar.gz",
-    "test_star.mirna_annotation" : "test_data/refs/test.chr19.miRNA.gtf",
+    "test_star.mirna_annotation" : "test_data/refs/test.chr19.miRNA.gtf.gz",
     "test_star.output_prefix" : "TEST_STAR",
     "test_star.ncpus" : 2,
     "test_star.ramGB" : 4,
