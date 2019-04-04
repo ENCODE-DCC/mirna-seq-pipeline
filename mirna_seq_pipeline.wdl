@@ -144,10 +144,11 @@ task star {
 
     command {
         tar -xzvf ${index}
+        gzip -cd ${annotation} > anno.gtf
         STAR \
             --genomeDir out \
             --readFilesIn ${fastq} \
-            --sjdbGTFfile ${annotation} \
+            --sjdbGTFfile anno.gtf \
             --runThreadN ${ncpus} \
             --alignEndsType EndToEnd \
             --outFilterMismatchNmax 1 \
