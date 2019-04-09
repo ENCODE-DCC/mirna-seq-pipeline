@@ -40,7 +40,7 @@ A typical input json file looks like this:
     "mirna_seq_pipeline.five_prime_adapters" : ["gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set3.fasta","gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set4.fasta"],
     "mirna_seq_pipeline.three_prime_adapters" : "gs://mirna-seq-pipeline/full_sized_reference_files/adapters/three_prime_adapter.fasta",
     "mirna_seq_pipeline.star_index" : "gs://mirna-seq-pipeline/full_sized_reference_files/Star_index_GRCh38.tar.gz",
-    "mirna_seq_pipeline.mirna_annotation" : "gs://mirna-seq-pipeline/full_sized_reference_files/ENCFF628BVT_mirna_anno.gtf",
+    "mirna_seq_pipeline.mirna_annotation" : "gs://mirna-seq-pipeline/full_sized_reference_files/ENCFF628BVT_mirna_anno.gtf.gz",
     "mirna_seq_pipeline.chrom_sizes" : "gs://mirna-seq-pipeline/full_sized_reference_files/GRCh38_EBV.chrom.sizes.tsv",
     "mirna_seq_pipeline.experiment_prefix" : "ENCSR569QVM",
     "mirna_seq_pipeline.cutadapt_ncpus" : "2",
@@ -60,14 +60,14 @@ Following elaborates the meaning of each line in the input file.
 * `mirna_seq_pipeline.fastqs` Is a list of input fastq files, one for each replicate.
 * `mirna_seq_pipeline.five_prime_adapters` Is a list of 5' adapter fasta files, one for each replicate. Note: order of this list should correspond to the order of `mirna_seq_pipeline.fastqs`.
 * `mirna_seq_pipeline.three_prime_adapters` Is the fasta file containing 3' adapters. Same set is used for all the replicates.
-* `mirna_seq_pipeline.star_index` Is the gzipped tar archive that contains STAR index. 
-* `mirna_seq_pipeline.mirna_annotation` Is the .gtf file containing miRNA annotations.
+* `mirna_seq_pipeline.star_index` Is the gzipped tar archive that contains STAR index. GRCh38 based on Gencode V24 version is available for download on [ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
+* `mirna_seq_pipeline.mirna_annotation` Is the gzipped .gtf(.gz) file containing miRNA annotations. Gencode V24 version available for download on [ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/).
 * `mirna_seq_pipeline.chrom_sizes` Is .tsv that contains chromosome sizes.
 * `mirna_seq_pipeline.experiment_prefix` Is prefix that will be added to important output filenames.
 
 #### Example: 
     
-    Assume the `mmirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
+    Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
 
 Following inputs define the computational resources given to the pipeline tasks.
 
