@@ -6,6 +6,7 @@ This document contains more detailed information on the inputs, outputs and the 
 
 [Software](reference.md#software)  
 [Inputs](reference.md#inputs)  
+[Reference files](reference.md#getting-reference-files)
 [Outputs](reference.md#outputs)
 
 ## Software
@@ -31,6 +32,10 @@ Conversion from .wig format to .bigWig format is done using WigToBigWig, downloa
 Alignment, quantitation and generation of the .wig files is done using [STAR 2.5.1b](https://github.com/alexdobin/STAR/releases/tag/2.5.1b). For detailed description of the software see [Article by Dobin et al](https://www.ncbi.nlm.nih.gov/pubmed/23104886). Multiple versions of the software have been released since writing the article.
 
 ## Inputs
+
+### Getting reference files
+
+MiRNA annotations are available in [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/). Corresponding STAR Index is also available via [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
 
 A typical input json file looks like this:
 
