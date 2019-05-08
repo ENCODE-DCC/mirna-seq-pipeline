@@ -6,7 +6,7 @@ This document contains more detailed information on the inputs, outputs and the 
 
 [Software](reference.md#software)  
 [Inputs](reference.md#inputs)  
-[Reference files](reference.md#getting-reference-files)
+[Reference files](reference.md#getting-reference-files)  
 [Outputs](reference.md#outputs)
 
 ## Software
