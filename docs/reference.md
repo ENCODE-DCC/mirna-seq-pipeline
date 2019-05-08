@@ -54,8 +54,8 @@ A typical input json file looks like this:
     "mirna_seq_pipeline.star_ncpus" : "16",
     "mirna_seq_pipeline.star_ramGB" : "60",
     "mirna_seq_pipeline.star_disk" : "local-disk 200 SSD",
-    "mirna_seq_pipeline.wigtobigwig_ncpus" : "4",
-    "mirna_seq_pipeline.wigtobigwig_ramGB" : "26",
+    "mirna_seq_pipeline.wigtobigwig_ncpus" : "2",
+    "mirna_seq_pipeline.wigtobigwig_ramGB" : "7",
     "mirna_seq_pipeline.wigtobigwig_disk" : "local-disk 200 SSD"
 }
 ```
@@ -65,9 +65,9 @@ Following elaborates the meaning of each line in the input file.
 * `mirna_seq_pipeline.fastqs` Is a list of input fastq files, one for each replicate.
 * `mirna_seq_pipeline.five_prime_adapters` Is a list of 5' adapter fasta files, one for each replicate. Note: order of this list should correspond to the order of `mirna_seq_pipeline.fastqs`.
 * `mirna_seq_pipeline.three_prime_adapters` Is the fasta file containing 3' adapters. Same set is used for all the replicates.
-* `mirna_seq_pipeline.star_index` Is the gzipped tar archive that contains STAR index. GRCh38 based on Gencode V24 version is available for download on [ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
-* `mirna_seq_pipeline.mirna_annotation` Is the gzipped .gtf(.gz) file containing miRNA annotations. Gencode V24 version available for download on [ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/).
-* `mirna_seq_pipeline.chrom_sizes` Is .tsv that contains chromosome sizes.
+* `mirna_seq_pipeline.star_index` Is the gzipped tar archive that contains STAR index. GRCh38 based on Gencode V24 version is available for download on [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
+* `mirna_seq_pipeline.mirna_annotation` Is the gzipped .gtf(.gz) file containing miRNA annotations. Gencode V24 version available for download on [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/).
+* `mirna_seq_pipeline.chrom_sizes` Is .tsv that contains chromosome sizes. This can be downloaded from [The ENCODE Portal](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/)
 * `mirna_seq_pipeline.experiment_prefix` Is prefix that will be added to important output filenames.
 
 #### Example: 

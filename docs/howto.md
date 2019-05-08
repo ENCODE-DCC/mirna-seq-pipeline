@@ -15,6 +15,92 @@ Before following these instructions, make sure you have completed installation a
 
 ## Google Cloud
 
+Make sure you have completed the steps for installation and Google Cloud setup described in the [installation instructions](installation.md#google-cloud). The following assumes your Google Cloud project is `[YOUR_PROJECT]`, you have created a bucket `gs://[YOUR_BUCKET_NAME]`, and also directories `inputs`, `output` and `reference` in the bucket.
+The goal is to run the pipeline with test data using Google Cloud Platform.
+
+1. Launch a VM into your Google Cloud project, and connect to the instance.
+
+2. Get the code and move into the code directory:
+
+```bash
+  git clone https://github.com/ENCODE-DCC/mirna-seq-pipeline.git
+  cd mirna-seq-pipeline
+``` 
+
+3. Get the STAR index:
+
+```bash
+  curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+```
+
+4. Move the reference files and required adapters into your Google Cloud bucket (we will assume you have created the directories on your Google Cloud bucket):
+
+```bash
+  gsutil cp test_data/refs/* gs://[YOUR_BUCKET_NAME]/references/
+  gsutil cp adapters/five_prime_adapter_set3.fasta gs://[YOUR_BUCKET_NAME]/references/
+  gsutil cp adapters/five_prime_adapter_set4.fasta gs://[YOUR_BUCKET_NAME]/references/
+  gsutil cp adapters/three_prime_adapter.fasta gs://[YOUR_BUCKET_NAME]/references/
+```
+
+5. Move the input files into your Google Cloud bucket (we will assume you have created the directories on your Google Cloud bucket):
+
+```bash
+  gsutil cp test_data/data/*.fastq.gz gs://[YOUR_BUCKET_NAME]/input_data/
+```
+
+6. Set up the `input.json`. Copy-paste the following onto your favorite text editor:
+
+```
+{
+    "mirna_seq_pipeline.fastqs" : ["gs://[YOUR_BUCKET_NAME]/input_data/rep1ENCSR569QVM_chr19.fastq.gz", "gs://[YOUR_BUCKET_NAME]/input_data/rep2ENCSR569QVM_chr19.fastq.gz"],
+    "mirna_seq_pipeline.five_prime_adapters" : ["gs://[YOUR_BUCKET_NAME]/references/five_prime_adapter_set3.fasta", "gs://[YOUR_BUCKET_NAME]/references/five_prime_adapter_set4.fasta"],
+    "mirna_seq_pipeline.three_prime_adapters" : "gs://[YOUR_BUCKET_NAME]/references/three_prime_adapter.fasta",
+    "mirna_seq_pipeline.star_index" : "gs://[YOUR_BUCKET_NAME]/references/star_index_mirna_chr19.tar.gz",
+    "mirna_seq_pipeline.mirna_annotation" : "gs://[YOUR_BUCKET_NAME]/references/test.chr19.miRNA.gtf.gz",
+    "mirna_seq_pipeline.chrom_sizes" : "gs://[YOUR_BUCKET_NAME]/references/test.chrom.sizes.tsv",
+    "mirna_seq_pipeline.experiment_prefix" : "TEST_WORKFLOW_2REPS",
+    "mirna_seq_pipeline.cutadapt_ncpus" : 1,
+    "mirna_seq_pipeline.cutadapt_ramGB" : 2,
+    "mirna_seq_pipeline.cutadapt_disk" : "local-disk 20 SSD",
+    "mirna_seq_pipeline.star_ncpus" : 2,
+    "mirna_seq_pipeline.star_ramGB" : 4,
+    "mirna_seq_pipeline.star_disk" : "local-disk 20 SSD",
+    "mirna_seq_pipeline.wigtobigwig_ncpus" : 1,
+    "mirna_seq_pipeline.wigtobigwig_ramGB" : 2,
+    "mirna_seq_pipeline.wigtobigwig_disk" : "local-disk 20 SSD" 
+}
+```
+
+Replace `[YOUR_BUCKET_NAME]` with the actual name of your Google Cloud bucket and save the file as `input.json`.
+
+7. Run the pipeline:
+
+```bash
+    $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=google -Dbackend.providers.google.config.project=[YOUR_PROJECT] -Dbackend.providers.google.config.root=gs://[YOUR_BUCKET_NAME]/output cromwell-35.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
+```
+
+8. You can observe the virtual machines spinning up on your Google Cloud Compute Engine dashboard, and after the pipeline finishes in few minutes you can the output in `gs://[YOUR_BUCKET_NAME]/output`.
+
 ## Local with Docker
+
+Make sure you have completed the installation of docker, Java and Cromwell as described in the [installation instructions](installation.md). The goal is to run the pipeline with test data locally using Docker.
+
+1. Get the code and move into the code directory:
+
+```bash
+  git clone https://github.com/ENCODE-DCC/mirna-seq-pipeline.git
+  cd mirna-seq-pipeline
+``` 
+
+2. Get the STAR index:
+
+```bash
+  curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+```
+
+3. Run the pipeline:
+```
+  $ java -jar -Dconfig.file=backends/backend.conf cromwell-35.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
+```
 
 ## SLURM Singularity
