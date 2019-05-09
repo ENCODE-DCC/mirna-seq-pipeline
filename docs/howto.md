@@ -105,7 +105,7 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 
 ## SLURM Singularity
 
-For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions. 
+For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
 
 1. Get the code and move into the code directory:
 
@@ -123,7 +123,9 @@ For this example in addition to an appropriate versions of Java and Cromwell, yo
 3. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`. It is bad practice to build images (or do any other intensive work) on login nodes. For this reason we will first invoke an interactive session on a different node by running `sdev` command, and building there (It will take few seconds to get back into the shell after running `sdev`).
 
 ```bash
-  $ sdev
-  $ SINGULARITY_PULLFOLDER=~/.singularity singularity pull docker://quay.io/encode-dcc/rna-seq-pipeline:v1.0
-  $ exit #this takes you back to the login node
+  sdev
+  mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.0.simg -F docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
+  exit #this takes you back to the login node
 ```
+
+
