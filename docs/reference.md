@@ -88,6 +88,10 @@ Following inputs define the computational resources given to the pipeline tasks.
 
 ## Outputs
 
+#### Cromwell output directory structure
+
+Cromwell: Cromwell will store outputs for each task under directory cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]. For all tasks [IDX] means a zero-based index for each replicate.
+
 #### Task Cutadapt
 
 * `no3ad_untrimmed_fastq` .fastq with the reads in which the 3' adapter was not found.
@@ -103,6 +107,7 @@ Following inputs define the computational resources given to the pipeline tasks.
 * `minus_strand_all_wig` Wiggle from all minus strand reads. Intermediate file used for signal track generation.
 * `plus_strand_unique_wig` Wiggle from uniquely mapping plus strand reads. Intermediate file used for signal track generation.
 * `minus_strand_unique_wig` Wiggle from uniquely mapping minus strand reads. Intermediate file used for signal track generation.
+* `star_qc_json` .json with alignment QC metrics.
 
 #### Task WigToBigWig
 
@@ -110,3 +115,7 @@ Following inputs define the computational resources given to the pipeline tasks.
 * `minus_strand_all_bigwig` Signal track (bigwig) from all minus strand reads.
 * `plus_strand_unique_bigwig` Signal track (bigwig) from uniquely mapping plus strand reads.
 * `minus_strand_unique_bigwig` Signal track (bigwig) from uniquely mapping minus strand reads.
+
+#### Task Spearman_correlation (when there are exactly 2 replicates)
+
+* `spearman_json` .json file containing spearman correlation metric between the replicates
