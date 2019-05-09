@@ -105,7 +105,7 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 
 ## SLURM Singularity
 
-For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
+For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). Note that `cromwell-35.jar` needs to be in your `$HOME` directory. The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
 
 1. Get the code and move into the code directory:
 
@@ -127,5 +127,23 @@ For this example in addition to an appropriate versions of Java and Cromwell, yo
   mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.0.simg -F docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
   exit #this takes you back to the login node
 ```
+
+4. Move to the code directory and submit the pipeline job script (it is possible you will not need to enter `-A [YOUR_SLURM_ACCOUNT]` depending your cluster settings):
+
+```bash
+  sbatch -A [YOUR_SLURM_ACCOUNT] hpc_launch_scripts/submit_slurm_example.sh
+```
+
+Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/data/directory2`you must edit `workflow_opts/singularity.json` in the following way:
+```
+{
+    "default_runtime_attributes" : {
+        "singularity_container" : "~/.singularity/mirna-seq-pipeline-v1.0.simg",
+        "singularity_bindpath" : "~/, /in/some/data/directory1/, /in/some/data/directory2/"
+    }
+}
+```
+
+5. After the job is finished, you can see the outputs under the directory tree in `~/mirna-seq-pipeline/cromwell-executions/`.
 
 

@@ -1,6 +1,6 @@
 # INSTALLATION
 
-To run the pipeline you need to install following software. Running the pipeline on Google Cloud or DNAnexus requires additional setup detailed below.
+To run the pipeline you need to install following software. Running the pipeline on Google Cloud requires additional setup detailed below.
 
 ## Java 8
 
