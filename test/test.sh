@@ -46,11 +46,11 @@ if [ $4 = "singularity" ]; then
     # Write workflow option JSON file for singularity
     BACKEND=singularity
     TMP_WF_OPT=$RESULT_PREFIX.test_mirna_wf_opt.json
-    SINGULARITY_IMAGE=$(echo ${DOCKER_IMAGE} | sed 's/quay\.io\/encode-dcc\///g' | sed 's/:/-/' | sed 's/$/\.simg/')
+    SINGULARITY_IMAGE=$(echo ${DOCKER_IMAGE} | sed 's/quay\.io\/encode-dcc\///g' | sed 's/:/_/' | sed 's/$/\.sif/')
     cat > $TMP_WF_OPT << EOM
     {
         "default_runtime_attributes" : {
-            "singularity_container" : "~/.singularity/$SINGULARITY_IMAGE"
+            "singularity_container" : "~/mirna-seq-pipeline/$SINGULARITY_IMAGE"
         }
     }
 EOM

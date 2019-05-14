@@ -1,9 +1,10 @@
-# CircleCI 2.0 configuration file
+# CircleCI 2.1 configuration file
 # for ENCODE MICRO-RNA-SEQ-PIPELINE
 # Maintainer: Otto Jolanki
 
 # Defaults, functions and commands
 ---
+version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/buildpack-deps:xenial-scm
@@ -47,33 +48,10 @@ install_singularity: &install_singularity
     sudo make install
     singularity --version
 
-commands:
-
-  install_golang:
-    description: |
-      Install GoLang to /tmp
-    parameters:
-      go-version:
-        type: string
-        default: 1.11.5
-    steps:
-      - run:
-          name: Install GoLang
-          command: >
-            if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
-            if ! type "sudo" > /dev/null; then export SUDO=""; fi
-            cd /tmp
-            wget https://dl.google.com/go/go<< parameters.go-version
-            >>.linux-amd64.tar.gz
-            tar -xzf go<< parameters.go-version >>.linux-amd64.tar.gz
-            export PATH=/tmp/go/bin:$PATH
-                $SUDO mkdir -p /go
-                $SUDO chmod -R 7777 /go
-            which go
-            export GOPATH=/go
 
 # Jobs
-version: 2
+orbs:
+  singularity: singularity/singularity@1.0.3
 jobs:
   build:
     <<: *defaults
@@ -113,7 +91,6 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - install_golang
       - run: *make_tag
       - run: 
           command: |
@@ -131,7 +108,8 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *make_tag
       - run: 
           command: |
@@ -319,16 +297,15 @@ jobs:
 
 # Workflow
 workflows:
-  version: 2
   build_workflow:
     jobs:
       - build
       - test_cutadapt_docker:
           requires:
             - build
-#      - test_cutadapt_singularity:
-#          requires:
-#            - build
+      - test_cutadapt_singularity:
+          requires:
+            - build
       - test_star_docker:
           requires:
             - build
@@ -356,7 +333,7 @@ workflows:
       - push_template:
           requires:
             - test_cutadapt_docker
-#            - test_cutadapt_singularity
+            - test_cutadapt_singularity
             - test_star_docker
 #            - test_star_singularity
             - test_wigtobigwig_docker
