@@ -2,7 +2,7 @@
 # for ENCODE MICRO-RNA-SEQ-PIPELINE
 # Maintainer: Otto Jolanki
 
-# Defaults and functions
+# Defaults, functions and commands
 ---
 defaults: &defaults
   docker:
@@ -47,6 +47,31 @@ install_singularity: &install_singularity
     sudo make install
     singularity --version
 
+commands:
+
+  install_golang:
+    description: |
+      Install GoLang to /tmp
+    parameters:
+      go-version:
+        type: string
+        default: 1.11.5
+    steps:
+      - run:
+          name: Install GoLang
+          command: >
+            if [[ $EUID == 0 ]]; then export SUDO=""; else export SUDO="sudo"; fi
+            if ! type "sudo" > /dev/null; then export SUDO=""; fi
+            cd /tmp
+            wget https://dl.google.com/go/go<< parameters.go-version
+            >>.linux-amd64.tar.gz
+            tar -xzf go<< parameters.go-version >>.linux-amd64.tar.gz
+            export PATH=/tmp/go/bin:$PATH
+                $SUDO mkdir -p /go
+                $SUDO chmod -R 7777 /go
+            which go
+            export GOPATH=/go
+
 # Jobs
 version: 2
 jobs:
@@ -88,6 +113,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - install_golang
       - run: *make_tag
       - run: 
           command: |
