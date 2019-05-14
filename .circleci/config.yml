@@ -146,7 +146,8 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *make_tag
       - run: *get_star_index
       - run: 
@@ -186,7 +187,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run:
           command: |
             pyenv global 3.5.2
@@ -229,7 +231,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run:
           command: |
@@ -276,7 +279,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run:
           command: |
@@ -309,35 +313,35 @@ workflows:
       - test_star_docker:
           requires:
             - build
-#      - test_star_singularity:
-#          requires:
-#            - build
+      - test_star_singularity:
+          requires:
+            - build
       - test_wigtobigwig_docker:
           requires:
             - build
-#      - test_wigtobigwig_singularity:
-#          requires:
-#            - build
+      - test_wigtobigwig_singularity:
+          requires:
+            - build
       - test_workflow_docker:
           requires:
             - build
-#      - test_workflow_singularity:
-#          requires:
-#            - build
+      - test_workflow_singularity:
+          requires:
+            - build
       - test_workflow_2reps_docker:
           requires:
             - build
-#      - test_workflow_2reps_singularity:
-#          requires:
-#            - build
+      - test_workflow_2reps_singularity:
+          requires:
+            - build
       - push_template:
           requires:
             - test_cutadapt_docker
             - test_cutadapt_singularity
             - test_star_docker
-#            - test_star_singularity
+            - test_star_singularity
             - test_wigtobigwig_docker
-#            - test_wigtobigwig_singularity
+            - test_wigtobigwig_singularity
             - test_workflow_docker
-#            - test_workflow_singularity
+            - test_workflow_singularity
             - test_workflow_2reps_docker
