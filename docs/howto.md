@@ -76,7 +76,7 @@ Replace `[YOUR_BUCKET_NAME]` with the actual name of your Google Cloud bucket an
 7. Run the pipeline:
 
 ```bash
-    $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=google -Dbackend.providers.google.config.project=[YOUR_PROJECT] -Dbackend.providers.google.config.root=gs://[YOUR_BUCKET_NAME]/output cromwell-35.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
+    $ java -jar -Dconfig.file=backends/backend.conf -Dbackend.default=google -Dbackend.providers.google.config.project=[YOUR_PROJECT] -Dbackend.providers.google.config.root=gs://[YOUR_BUCKET_NAME]/output cromwell-40.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
 ```
 
 8. You can observe the virtual machines spinning up on your Google Cloud Compute Engine dashboard, and after the pipeline finishes in few minutes you can the output in `gs://[YOUR_BUCKET_NAME]/output`.
@@ -100,12 +100,12 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 
 3. Run the pipeline:
 ```
-  $ java -jar -Dconfig.file=backends/backend.conf cromwell-35.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
+  $ java -jar -Dconfig.file=backends/backend.conf cromwell-40.jar run mirna_seq_pipeline.wdl -i input.json -o workflow_opts/docker.json
 ```
 
 ## SLURM Singularity
 
-For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). Note that `cromwell-35.jar` needs to be in your `$HOME` directory. The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
+For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). Note that `cromwell-40.jar` needs to be in your `$HOME` directory. The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
 
 1. Get the code and move into the code directory:
 

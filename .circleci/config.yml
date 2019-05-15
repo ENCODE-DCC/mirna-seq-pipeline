@@ -1,9 +1,10 @@
-# CircleCI 2.0 configuration file
+# CircleCI 2.1 configuration file
 # for ENCODE MICRO-RNA-SEQ-PIPELINE
 # Maintainer: Otto Jolanki
 
-# Defaults and functions
+# Defaults, functions and commands
 ---
+version: 2.1
 defaults: &defaults
   docker:
     - image: circleci/buildpack-deps:xenial-scm
@@ -29,26 +30,9 @@ get_star_index: &get_star_index
   command: |
     curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 
-install_singularity: &install_singularity
-  name: install singularity
-  command: |
-    sudo apt-get update
-    sudo apt-get install \
-    python \
-    dh-autoreconf \
-    build-essential \
-    libarchive-dev \
-    squashfs-tools
-    wget https://github.com/singularityware/singularity/releases/download/2.6.0/singularity-2.6.0.tar.gz
-    tar xvf singularity-2.6.0.tar.gz
-    cd singularity-2.6.0
-    ./configure --prefix=/usr/local --sysconfdir=/etc
-    make
-    sudo make install
-    singularity --version
-
 # Jobs
-version: 2
+orbs:
+  singularity: singularity/singularity@1.0.3
 jobs:
   build:
     <<: *defaults
@@ -105,7 +89,8 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *make_tag
       - run: 
           command: |
@@ -142,7 +127,8 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *make_tag
       - run: *get_star_index
       - run: 
@@ -182,7 +168,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run:
           command: |
             pyenv global 3.5.2
@@ -225,7 +212,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run:
           command: |
@@ -272,7 +260,8 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: *install_singularity
+      - singularity/install-go
+      - singularity/debian-install-3
       - run: *get_star_index
       - run:
           command: |
@@ -293,48 +282,47 @@ jobs:
 
 # Workflow
 workflows:
-  version: 2
   build_workflow:
     jobs:
       - build
       - test_cutadapt_docker:
           requires:
             - build
-#      - test_cutadapt_singularity:
-#          requires:
-#            - build
+      - test_cutadapt_singularity:
+          requires:
+            - build
       - test_star_docker:
           requires:
             - build
-#      - test_star_singularity:
-#          requires:
-#            - build
+      - test_star_singularity:
+          requires:
+            - build
       - test_wigtobigwig_docker:
           requires:
             - build
-#      - test_wigtobigwig_singularity:
-#          requires:
-#            - build
+      - test_wigtobigwig_singularity:
+          requires:
+            - build
       - test_workflow_docker:
           requires:
             - build
-#      - test_workflow_singularity:
-#          requires:
-#            - build
+      - test_workflow_singularity:
+          requires:
+            - build
       - test_workflow_2reps_docker:
           requires:
             - build
-#      - test_workflow_2reps_singularity:
-#          requires:
-#            - build
+      - test_workflow_2reps_singularity:
+          requires:
+            - build
       - push_template:
           requires:
             - test_cutadapt_docker
-#            - test_cutadapt_singularity
+            - test_cutadapt_singularity
             - test_star_docker
-#            - test_star_singularity
+            - test_star_singularity
             - test_wigtobigwig_docker
-#            - test_wigtobigwig_singularity
+            - test_wigtobigwig_singularity
             - test_workflow_docker
-#            - test_workflow_singularity
+            - test_workflow_singularity
             - test_workflow_2reps_docker
