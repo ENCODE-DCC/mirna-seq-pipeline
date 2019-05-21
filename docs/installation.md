@@ -21,6 +21,14 @@ Download WDL runner Cromwell from [here](https://github.com/broadinstitute/cromw
 Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
 Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) or [linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#upgrade-docker-after-using-the-convenience-script).
 
+## Caper
+
+For running the pipeline we recommend using [Caper](https://github.com/ENCODE-DCC/caper) that wraps Cromwell in an easier to use package.
+
+## croo
+
+For organizing pipeline outputs we recommend using [croo](https://github.com/ENCODE-DCC/croo) that makes a nicely organized directory from the complicated output tree Cromwell defaults to. The configuration file for `croo` is named `output_definition.json` and can be found in the root of this repository.
+
 ## Singularity
 
 If for some reason you cannot run Docker, install [singularity](https://www.sylabs.io/guides/3.1/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `3.1`.
