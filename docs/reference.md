@@ -5,9 +5,10 @@ This document contains more detailed information on the inputs, outputs and the 
 # CONTENTS
 
 [Software](reference.md#software)  
+[Recommended Software](reference.md#recommended-software)  
 [Inputs](reference.md#inputs)  
 [Reference files](reference.md#getting-reference-files)  
-[Outputs](reference.md#outputs)
+[Outputs](reference.md#outputs)  
 [Output organizer](reference.md#cromweller-output-organizer)
 
 ## Software
@@ -32,11 +33,17 @@ Conversion from .wig format to .bigWig format is done using WigToBigWig, downloa
 
 Alignment, quantitation and generation of the .wig files is done using [STAR 2.5.1b](https://github.com/alexdobin/STAR/releases/tag/2.5.1b). For detailed description of the software see [Article by Dobin et al](https://www.ncbi.nlm.nih.gov/pubmed/23104886). Multiple versions of the software have been released since writing the article.
 
+## Recommended Software
+
+To make Cromwell usage more pleasant, we have developed [Caper](https://github.com/ENCODE-DCC/caper) that provides highly enhanced experience when running pipelines, and [croo](https://github.com/ENCODE-DCC/croo) that helps organizing Cromwell outputs. Croo configuration file for this pipeline is `output_definition.json` and it is located in the root of this repository.
+
 ## Inputs
 
 ### Getting reference files
 
-MiRNA annotations are available in [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/). Corresponding STAR Index is also available via [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
+MiRNA annotations are available in [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/). Corresponding STAR Index is also available via [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/). It is also possible to build STAR index from reference by using the `generate_star_index.wdl`.
+
+### Pipeline input file
 
 A typical input json file looks like this:
 

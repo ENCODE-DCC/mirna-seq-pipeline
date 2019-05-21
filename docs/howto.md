@@ -1,7 +1,7 @@
 # HOWTO
 
 Here are concrete instructions for running analyses on different platforms.
-Before following these instructions, make sure you have completed installation and possible account setup detailed in [installation instructions](installation.md). 
+Before following these instructions, make sure you have completed installation and possible account setup detailed in [installation instructions](installation.md). These instructions show how to use Cromwell directly. Consider running the pipeline using [Caper](https://github.com/ENCODE-DCC/caper) which is more user friendly way.
 
 # CONTENTS
 
