@@ -4,7 +4,7 @@ ENCODE Micro RNA-seq pipeline
 
 OVERVIEW
 ------------
-This is the ENCODE-DCC Micro RNA-sequencing pipeline. The scope of the pipeline is to align reads, generate signal tracks, and quantify genes.
+This is the ENCODE-DCC Micro RNA-sequencing pipeline. The scope of the pipeline is to cut adapters, align reads, generate signal tracks, and quantify genes.
 
 INSTALLATION
 -------------
