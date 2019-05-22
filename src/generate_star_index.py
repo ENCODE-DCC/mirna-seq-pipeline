@@ -8,7 +8,6 @@ __version__ = "0.1.0"
 __license__ = "MIT"
 
 import argparse
-import gzip
 import logging
 import os
 import shlex
