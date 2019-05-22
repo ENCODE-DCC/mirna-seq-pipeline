@@ -1,10 +1,6 @@
 ENCODE Micro RNA-seq pipeline
 =================================================
-[![CircleCI](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1.svg?style=svg)](https://circleci.com/gh/ENCODE-DCC/mirna-rna-seq-pipeline/tree/dev1)
-
-[![Docker Repository on Quay](https://quay.io/repository/encode-dcc/mirna-seq-pipeline/status "Docker Repository on Quay")](https://quay.io/repository/encode-dcc/mirna-seq-pipeline)
-
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+[![CircleCI](https://circleci.com/gh/ENCODE-DCC/rna-seq-pipeline/tree/dev1.svg?style=svg)](https://circleci.com/gh/ENCODE-DCC/mirna-rna-seq-pipeline/tree/dev1) [![Docker Repository on Quay](https://quay.io/repository/encode-dcc/mirna-seq-pipeline/status "Docker Repository on Quay")](https://quay.io/repository/encode-dcc/mirna-seq-pipeline) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 OVERVIEW
 ------------
