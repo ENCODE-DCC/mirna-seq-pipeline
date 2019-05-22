@@ -9,7 +9,8 @@ Before following these instructions, make sure you have completed installation a
 
 [Google Cloud](howto.md#google-cloud)  
 [Local with Docker](howto.md#local-with-docker)  
-[SLURM](howto.md#slurm-singularity)
+[SLURM](howto.md#slurm-singularity)  
+[Building STAR index](howto.md#building-star-index)
 
 # RUNNING THE PIPELINE
 
@@ -146,4 +147,17 @@ Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/d
 
 5. After the job is finished, you can see the outputs under the directory tree in `~/mirna-seq-pipeline/cromwell-executions/`.
 
+## Building STAR index
 
+If you want to build your own STAR index (maybe you are running analyses on another species, or want to use custom spikein sequences) you can use `generate_star_index.wdl` workflow. Format your `input.json` using the following example,
+```
+{
+  "generate_STAR_index.reference_sequence" : "gs://mirna-seq-pipeline/full_sized_reference_files/GRCh38_no_alt_analysis_set_GCA_000001405.15.fasta",
+  "generate_STAR_index.annotation" : "gs://mirna-seq-pipeline/full_sized_reference_files/gencode.v24.primary_assembly.annotation_fromPortal.gtf",
+  "generate_STAR_index.output_filename" : "Star_index_GRCh38_from_primary_anno_to_portal.tar.gz",
+  "generate_STAR_index.ncpus" : 16,
+  "generate_STAR_index.ramGB" : 60,
+  "generate_STAR_index.disks" : "local-disk 250 SSD"
+}
+```
+and run on the platform of your choice, adapting from the previous examples, or using [Caper](https://github.com/ENCODE-DCC/caper).
