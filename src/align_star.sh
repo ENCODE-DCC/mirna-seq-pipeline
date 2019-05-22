@@ -19,22 +19,22 @@ echo $genomedir
 echo $chromref
 
 params='--runThreadN 16
-	--alignEndsType EndToEnd
-	--outFilterMismatchNmax 1
-	--outFilterMultimapScoreRange 0
-	--quantMode TranscriptomeSAM GeneCounts
-	--outReadsUnmapped Fastx
-	--outSAMtype BAM SortedByCoordinate
-	--outFilterMultimapNmax 10
-	--outSAMunmapped Within
-	--outFilterScoreMinOverLread 0
-	--outFilterMatchNminOverLread 0
-	--outFilterMatchNmin 16
-	--alignSJDBoverhangMin 1000
-	--alignIntronMax 1 
-	--outWigType wiggle
-	--outWigStrand Stranded
-	--outWigNorm RPM
+    --alignEndsType EndToEnd
+    --outFilterMismatchNmax 1
+    --outFilterMultimapScoreRange 0
+    --quantMode TranscriptomeSAM GeneCounts
+    --outReadsUnmapped Fastx
+    --outSAMtype BAM SortedByCoordinate
+    --outFilterMultimapNmax 10
+    --outSAMunmapped Within
+    --outFilterScoreMinOverLread 0
+    --outFilterMatchNminOverLread 0
+    --outFilterMatchNmin 16
+    --alignSJDBoverhangMin 1000
+    --alignIntronMax 1 
+    --outWigType wiggle
+    --outWigStrand Stranded
+    --outWigNorm RPM
 '
 STAR --genomeDir $genomedir --readFilesIn $results_path$slid"_trim.fastq" --outFileNamePrefix $results_path --sjdbGTFfile $miRNA_annotation $params
 
