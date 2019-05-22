@@ -9,7 +9,7 @@ This document contains more detailed information on the inputs, outputs and the 
 [Inputs](reference.md#inputs)  
 [Reference files](reference.md#getting-reference-files)  
 [Outputs](reference.md#outputs)  
-[Output organizer](reference.md#cromweller-output-organizer)
+[Output organizer](reference.md#croo)
 
 ## Software
 
@@ -100,9 +100,9 @@ Following inputs define the computational resources given to the pipeline tasks.
 
 Cromwell will store outputs for each task under directory cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]. For all tasks [IDX] means a zero-based index for each replicate. Most humans find the Cromwell output structure unwieldy and confusing. If you are like most humans, see [the next section](reference.md#cromwell-output-organizer)
 
-#### Cromwell output organizer
+#### croo
 
-To make the experience of looking at the outputs we recommend using [the cromwell output organizer](https://github.com/ENCODE-DCC/cromwell_output_organizer). The output definition file (`output_definition.json`) that the output organizer requires is provided as a part of this github repo.
+To make the experience of looking at the outputs we recommend using [the cromwell output organizer](https://github.com/ENCODE-DCC/croo). The output definition file (`output_definition.json`) that the output organizer requires is provided as a part of this github repo.
 
 #### Task Cutadapt
 
