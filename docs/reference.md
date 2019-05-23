@@ -5,10 +5,11 @@ This document contains more detailed information on the inputs, outputs and the 
 # CONTENTS
 
 [Software](reference.md#software)  
+[Recommended Software](reference.md#recommended-software)  
 [Inputs](reference.md#inputs)  
 [Reference files](reference.md#getting-reference-files)  
-[Outputs](reference.md#outputs)
-[Output organizer](reference.md#cromweller-output-organizer)
+[Outputs](reference.md#outputs)  
+[Output organizer](reference.md#croo)
 
 ## Software
 
@@ -32,11 +33,17 @@ Conversion from .wig format to .bigWig format is done using WigToBigWig, downloa
 
 Alignment, quantitation and generation of the .wig files is done using [STAR 2.5.1b](https://github.com/alexdobin/STAR/releases/tag/2.5.1b). For detailed description of the software see [Article by Dobin et al](https://www.ncbi.nlm.nih.gov/pubmed/23104886). Multiple versions of the software have been released since writing the article.
 
+## Recommended Software
+
+To make Cromwell usage more pleasant, we have developed [Caper](https://github.com/ENCODE-DCC/caper) that provides highly enhanced experience when running pipelines, and [croo](https://github.com/ENCODE-DCC/croo) that helps organizing Cromwell outputs. Croo configuration file for this pipeline is `output_definition.json` and it is located in the root of this repository.
+
 ## Inputs
 
 ### Getting reference files
 
-MiRNA annotations are available in [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/). Corresponding STAR Index is also available via [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
+MiRNA annotations are available in [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/). Corresponding STAR Index is also available via [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/). It is also possible to build STAR index from reference by using the `generate_star_index.wdl`.
+
+### Pipeline input file
 
 A typical input json file looks like this:
 
@@ -72,8 +79,8 @@ Following elaborates the meaning of each line in the input file.
 * `mirna_seq_pipeline.experiment_prefix` Is prefix that will be added to important output filenames.
 
 #### Example: 
-    
-    Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
+
+Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
 
 Following inputs define the computational resources given to the pipeline tasks.
 
@@ -93,9 +100,9 @@ Following inputs define the computational resources given to the pipeline tasks.
 
 Cromwell will store outputs for each task under directory cromwell-executions/[WORKFLOW_ID]/call-[TASK_NAME]/shard-[IDX]. For all tasks [IDX] means a zero-based index for each replicate. Most humans find the Cromwell output structure unwieldy and confusing. If you are like most humans, see [the next section](reference.md#cromwell-output-organizer)
 
-#### Cromwell output organizer
+#### croo
 
-To make the experience of looking at the outputs we recommend using [the cromwell output organizer](https://github.com/ENCODE-DCC/cromwell_output_organizer). The output definition file (`output_definition.json`) that the output organizer requires is provided as a part of this github repo.
+To make the experience of looking at the outputs we recommend using [the cromwell output organizer](https://github.com/ENCODE-DCC/croo). The output definition file (`output_definition.json`) that the output organizer requires is provided as a part of this github repo.
 
 #### Task Cutadapt
 
