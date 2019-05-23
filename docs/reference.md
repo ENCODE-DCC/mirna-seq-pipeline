@@ -79,8 +79,8 @@ Following elaborates the meaning of each line in the input file.
 * `mirna_seq_pipeline.experiment_prefix` Is prefix that will be added to important output filenames.
 
 #### Example: 
-    
-    Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
+
+Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
 
 Following inputs define the computational resources given to the pipeline tasks.
 

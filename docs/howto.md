@@ -106,7 +106,8 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 
 ## SLURM Singularity
 
-For this example in addition to an appropriate versions of Java and Cromwell, you also need to have Singularity installed. For details see [installation instructions](installation.md). Note that `cromwell-40.jar` needs to be in your `$HOME` directory. The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
+For this example you need to have Singularity installed. For details see [installation instructions](installation.md). The goal is to run the pipeline with testdata using Singularity on a SLURM cluster. Login into your cluster first and then follow the instructions.
+When running workflows on SLURM (or other) HPC clusters, use [Caper](https://github.com/ENCODE-DCC/caper), it takes care of backend configuration for you.
 
 1. Get the code and move into the code directory:
 
@@ -129,12 +130,6 @@ For this example in addition to an appropriate versions of Java and Cromwell, yo
   exit #this takes you back to the login node
 ```
 
-4. Move to the code directory and submit the pipeline job script (it is possible you will not need to enter `-A [YOUR_SLURM_ACCOUNT]` depending your cluster settings):
-
-```bash
-  sbatch -A [YOUR_SLURM_ACCOUNT] hpc_launch_scripts/submit_slurm_example.sh
-```
-
 Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/data/directory2`you must edit `workflow_opts/singularity.json` in the following way:
 ```
 {
@@ -145,7 +140,28 @@ Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/d
 }
 ```
 
-5. After the job is finished, you can see the outputs under the directory tree in `~/mirna-seq-pipeline/cromwell-executions/`.
+4. Install caper. Python 3.4.1 or newer is required.
+
+```bash
+  pip install caper
+```
+
+5. Follow [Caper configuration instructions](https://github.com/ENCODE-DCC/caper#configuration-file). 
+
+Note: In Caper configuration file, you will need to give a value to `--time` parameter by editing `slurm-extra-param` line. For example:
+```
+  slurm-extra-param=--time=01:00:00
+```
+to give one hour of runtime.
+
+6. Edit the input file `test/test_workflow/test_workflow_2reps_input.json` so that all the input file paths are absolute.
+For example replace `test_data/data/rep1ENCSR569QVM_chr19.fastq.gz` in fastq inputs with `[PATH-TO-REPO]/test_data/data/rep1ENCSR569QVM_chr19.fastq.gz`. You can find out the `[PATH-TO-REPO]` by running `pwd` command in the `mirna-seq-pipeline` directory.
+
+7. Run the pipeline using Caper:
+
+```bash
+  caper run -i test/test_workflow/test_workflow_2reps_input.json -o workflow_opts/singularity.json -m metadata.json
+```
 
 ## Building STAR index
 
