@@ -1,0 +1,61 @@
+{
+    "mirna_seq_pipeline.cutadapt": {
+        "no3ad_untrimmed_fastq": {
+            "path": "cutadapt/rep${i+1}/${basename}"
+        },
+        "no5ad_untrimmed_fastq": {
+            "path": "cutadapt/rep${i+1}/${basename}"
+        },
+        "too_short_fastq": {
+            "path": "cutadapt/rep${i+1}/${basename}"
+        },
+        "trimmed_fastq": {
+            "path": "cutadapt/rep${i+1}/${basename}"
+        }
+    },
+    "mirna_seq_pipeline.star": {
+        "bam": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "tsv": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "plus_strand_all_wig": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "minus_strand_all_wig": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "plus_strand_unique_wig": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "minus_strand_unique_wig": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "star_qc_json": {
+            "path": "star/rep${i+1}/${basename}"
+        },
+        "star_qc_log": {
+            "path": "star/rep${i+1}/${basename}"
+        }
+    },
+    "mirna_seq_pipeline.wigtobigwig": {
+        "plus_strand_all_bigwig": {
+            "path": "wigtobigwig/rep${i+1}/${basename}"
+        },
+        "minus_strand_all_bigwig": {
+            "path": "wigtobigwig/rep${i+1}/${basename}"
+        },
+        "plus_strand_unique_bigwig": {
+            "path": "wigtobigwig/rep${i+1}/${basename}"
+        },
+        "minus_strand_unique_bigwig": {
+            "path": "wigtobigwig/rep${i+1}/${basename}"
+        }
+    },
+    "mirna_seq_pipeline.spearman_correlation": {
+        "spearman_json": {
+            "path": "spearman/${basename}"
+        } 
+    }
+}
