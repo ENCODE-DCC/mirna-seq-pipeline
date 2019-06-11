@@ -1,8 +1,8 @@
 # ENCODE micro rna seq pipeline: main pipeline
 # Maintainer: Otto Jolanki
 
-#CAPER docker quay.io/encode-dcc/mirna-seq-pipeline:caper_comments_1accabbc-103a-42d3-a233-895cf504820d
-#CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:caper_comments_1accabbc-103a-42d3-a233-895cf504820d
+#CAPER docker quay.io/encode-dcc/mirna-seq-pipeline:v1.0
+#CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
 
 workflow mirna_seq_pipeline {
     #File inputs
