@@ -49,5 +49,3 @@ RUN pip3 install pandas scipy
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
 ENV PATH="/software/mirna-seq-pipeline/src:${PATH}"
-
-ENTRYPOINT ["/bin/bash", "-c"]
