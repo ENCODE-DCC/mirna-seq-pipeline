@@ -42,7 +42,7 @@ RUN git clone --branch 1.9 --single-branch https://github.com/samtools/samtools.
 
 RUN pip3 install qc-utils==0.1.1
 
-# Install pandas and scipy
+# Install pandas==0.24.2 and scipy
 
 RUN pip3 install pandas scipy
 
