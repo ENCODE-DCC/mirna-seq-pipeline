@@ -44,7 +44,7 @@ RUN pip3 install qc-utils==0.1.1
 
 # Install pandas==0.24.2 and scipy
 
-RUN pip3 install pandas scipy
+RUN pip3 install pandas==0.24.2 scipy
 
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
