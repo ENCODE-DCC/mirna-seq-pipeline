@@ -89,6 +89,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
       - run: *make_tag
@@ -127,6 +128,7 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
       - run: *make_tag
@@ -167,9 +169,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
+      - run: *make_tag
       - run:
           command: |
             pyenv global 3.5.2
@@ -211,9 +214,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
+      - run: *make_tag
       - run: *get_star_index
       - run:
           command: |
@@ -259,9 +263,10 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - run: sudo apt-get update
       - singularity/install-go
       - singularity/debian-install-3
+      - run: *make_tag
       - run: *get_star_index
       - run:
           command: |
