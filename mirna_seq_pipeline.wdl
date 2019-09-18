@@ -3,6 +3,7 @@
 
 #CAPER docker quay.io/encode-dcc/mirna-seq-pipeline:v1.0
 #CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
+#CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json
 
 workflow mirna_seq_pipeline {
     #File inputs
