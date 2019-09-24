@@ -72,7 +72,7 @@
     "mirna_seq_pipeline.spearman_correlation": {
         "spearman_json": {
             "path": "spearman/${basename}",
-            "table": "Spearman/Replicates spearman correlation"
+            "table": "Spearman/Replicates Spearman correlation"
         } 
     }
 }
