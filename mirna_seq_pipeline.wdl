@@ -12,10 +12,10 @@ workflow mirna_seq_pipeline {
     #Array containing the input fastq files
     Array[File] fastqs
     #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
-    Array[File] five_prime_adapters 
+    Array[File] five_prime_adapters
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
-    
+
     #star
     #tar.gz archive that contains star index
     File star_index

@@ -7,9 +7,9 @@ Before following these instructions, make sure you have completed installation a
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)  
-[Local with Docker](howto.md#local-with-docker)  
-[SLURM](howto.md#slurm-singularity)  
+[Google Cloud](howto.md#google-cloud)
+[Local with Docker](howto.md#local-with-docker)
+[SLURM](howto.md#slurm-singularity)
 [Building STAR index](howto.md#building-star-index)
 
 # RUNNING THE PIPELINE
@@ -26,7 +26,7 @@ The goal is to run the pipeline with test data using Google Cloud Platform.
 ```bash
   git clone https://github.com/ENCODE-DCC/mirna-seq-pipeline.git
   cd mirna-seq-pipeline
-``` 
+```
 
 3. Get the STAR index:
 
@@ -68,7 +68,7 @@ The goal is to run the pipeline with test data using Google Cloud Platform.
     "mirna_seq_pipeline.star_disk" : "local-disk 20 SSD",
     "mirna_seq_pipeline.wigtobigwig_ncpus" : 1,
     "mirna_seq_pipeline.wigtobigwig_ramGB" : 2,
-    "mirna_seq_pipeline.wigtobigwig_disk" : "local-disk 20 SSD" 
+    "mirna_seq_pipeline.wigtobigwig_disk" : "local-disk 20 SSD"
 }
 ```
 
@@ -91,7 +91,7 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 ```bash
   git clone https://github.com/ENCODE-DCC/mirna-seq-pipeline.git
   cd mirna-seq-pipeline
-``` 
+```
 
 2. Get the STAR index:
 
@@ -114,7 +114,7 @@ When running workflows on SLURM (or other) HPC clusters, use [Caper](https://git
 ```bash
   git clone https://github.com/ENCODE-DCC/mirna-seq-pipeline.git
   cd mirna-seq-pipeline
-``` 
+```
 
 2. Get the STAR index:
 
@@ -146,7 +146,7 @@ Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/d
   pip install caper
 ```
 
-5. Follow [Caper configuration instructions](https://github.com/ENCODE-DCC/caper#configuration-file). 
+5. Follow [Caper configuration instructions](https://github.com/ENCODE-DCC/caper#configuration-file).
 
 Note: In Caper configuration file, you will need to give a value to `--time` parameter by editing `slurm-extra-param` line. For example:
 ```

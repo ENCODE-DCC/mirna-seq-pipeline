@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     pigz \
     #samtools dependencies
     libbz2-dev \
-    libncurses5-dev 
+    libncurses5-dev
 RUN mkdir /software
 WORKDIR /software
 ENV PATH="/software:${PATH}"

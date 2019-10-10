@@ -8,6 +8,7 @@ __license__ = "MIT"
 import argparse
 import json
 import logging
+
 import pandas as pd
 from qc_utils import QCMetric, QCMetricRecord
 from qc_utils.parsers import parse_starlog

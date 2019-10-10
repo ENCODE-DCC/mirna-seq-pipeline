@@ -1,78 +1,78 @@
 {
-    "mirna_seq_pipeline.cutadapt": {
-        "no3ad_untrimmed_fastq": {
-            "path": "cutadapt/rep${i+1}/${basename}",
-            "table": "Cutadapt/Replicate ${i+1}/Fastq of reads with no 3' adapter"
-        },
-        "no5ad_untrimmed_fastq": {
-            "path": "cutadapt/rep${i+1}/${basename}",
-            "table": "Cutadapt/Replicate ${i+1}/Fastq of reads with no 5' adapter"
-        },
-        "too_short_fastq": {
-            "path": "cutadapt/rep${i+1}/${basename}",
-            "table": "Cutadapt/Replicate ${i+1}/Fastq of reads that are too short"
-        },
-        "trimmed_fastq": {
-            "path": "cutadapt/rep${i+1}/${basename}",
-            "table": "Cutadapt/Replicate ${i+1}/Trimmed fastq"
-        }
+  "mirna_seq_pipeline.cutadapt": {
+    "no3ad_untrimmed_fastq": {
+      "path": "cutadapt/rep${i+1}/${basename}",
+      "table": "Cutadapt/Replicate ${i+1}/Fastq of reads with no 3' adapter"
     },
-    "mirna_seq_pipeline.star": {
-        "bam": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Alignments bam"
-        },
-        "tsv": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Quantifications tsv"
-        },
-        "plus_strand_all_wig": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Plus strand wig of all reads"
-        },
-        "minus_strand_all_wig": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Minus strand wig of all reads"
-        },
-        "plus_strand_unique_wig": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Plus strand wig of uniquely mapped reads"
-        },
-        "minus_strand_unique_wig": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Minus strand wig of uniquely mapped reads"
-        },
-        "star_qc_json": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Quality control json"
-        },
-        "star_qc_log": {
-            "path": "star/rep${i+1}/${basename}",
-            "table": "Star/Replicate ${i+1}/Python log"
-        }
+    "no5ad_untrimmed_fastq": {
+      "path": "cutadapt/rep${i+1}/${basename}",
+      "table": "Cutadapt/Replicate ${i+1}/Fastq of reads with no 5' adapter"
     },
-    "mirna_seq_pipeline.wigtobigwig": {
-        "plus_strand_all_bigwig": {
-            "path": "wigtobigwig/rep${i+1}/${basename}",
-            "table": "Wigtobigwig/Replicate ${i+1}/Plus strand bigwig of all reads"
-        },
-        "minus_strand_all_bigwig": {
-            "path": "wigtobigwig/rep${i+1}/${basename}",
-            "table": "Wigtobigwig/Replicate ${i+1}/Minus strand bigwig of all reads"
-        },
-        "plus_strand_unique_bigwig": {
-            "path": "wigtobigwig/rep${i+1}/${basename}",
-            "table": "Wigtobigwig/Replicate ${i+1}/Plus strand bigwig of uniquely mapped reads"
-        },
-        "minus_strand_unique_bigwig": {
-            "path": "wigtobigwig/rep${i+1}/${basename}",
-            "table": "Wigtobigwig/Replicate ${i+1}/Minus strand bigwig of uniquely mapped reads"
-        }
+    "too_short_fastq": {
+      "path": "cutadapt/rep${i+1}/${basename}",
+      "table": "Cutadapt/Replicate ${i+1}/Fastq of reads that are too short"
     },
-    "mirna_seq_pipeline.spearman_correlation": {
-        "spearman_json": {
-            "path": "spearman/${basename}",
-            "table": "Spearman/Replicates Spearman correlation"
-        } 
+    "trimmed_fastq": {
+      "path": "cutadapt/rep${i+1}/${basename}",
+      "table": "Cutadapt/Replicate ${i+1}/Trimmed fastq"
     }
+  },
+  "mirna_seq_pipeline.spearman_correlation": {
+    "spearman_json": {
+      "path": "spearman/${basename}",
+      "table": "Spearman/Replicates Spearman correlation"
+    }
+  },
+  "mirna_seq_pipeline.star": {
+    "bam": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Alignments bam"
+    },
+    "minus_strand_all_wig": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Minus strand wig of all reads"
+    },
+    "minus_strand_unique_wig": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Minus strand wig of uniquely mapped reads"
+    },
+    "plus_strand_all_wig": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Plus strand wig of all reads"
+    },
+    "plus_strand_unique_wig": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Plus strand wig of uniquely mapped reads"
+    },
+    "star_qc_json": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Quality control json"
+    },
+    "star_qc_log": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Python log"
+    },
+    "tsv": {
+      "path": "star/rep${i+1}/${basename}",
+      "table": "Star/Replicate ${i+1}/Quantifications tsv"
+    }
+  },
+  "mirna_seq_pipeline.wigtobigwig": {
+    "minus_strand_all_bigwig": {
+      "path": "wigtobigwig/rep${i+1}/${basename}",
+      "table": "Wigtobigwig/Replicate ${i+1}/Minus strand bigwig of all reads"
+    },
+    "minus_strand_unique_bigwig": {
+      "path": "wigtobigwig/rep${i+1}/${basename}",
+      "table": "Wigtobigwig/Replicate ${i+1}/Minus strand bigwig of uniquely mapped reads"
+    },
+    "plus_strand_all_bigwig": {
+      "path": "wigtobigwig/rep${i+1}/${basename}",
+      "table": "Wigtobigwig/Replicate ${i+1}/Plus strand bigwig of all reads"
+    },
+    "plus_strand_unique_bigwig": {
+      "path": "wigtobigwig/rep${i+1}/${basename}",
+      "table": "Wigtobigwig/Replicate ${i+1}/Plus strand bigwig of uniquely mapped reads"
+    }
+  }
 }

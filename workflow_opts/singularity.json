@@ -1,6 +1,6 @@
 {
-    "default_runtime_attributes" : {
-        "singularity" : "~/.singularity/mirna-seq-pipeline-v1.0.simg",
-        "singularity_bindpath" : "~/"
-    }
+  "default_runtime_attributes": {
+    "singularity": "~/.singularity/mirna-seq-pipeline-v1.0.simg",
+    "singularity_bindpath": "~/"
+  }
 }

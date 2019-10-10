@@ -1,11 +1,11 @@
 {
-    "test_wigtobigwig.plus_strand_all_wig" : "test_data/data/Signal.UniqueMultiple.str1.out.wig",
-    "test_wigtobigwig.minus_strand_all_wig" : "test_data/data/Signal.UniqueMultiple.str2.out.wig",
-    "test_wigtobigwig.plus_strand_unique_wig" : "test_data/data/Signal.Unique.str1.out.wig",
-    "test_wigtobigwig.minus_strand_unique_wig" : "test_data/data/Signal.Unique.str2.out.wig",
-    "test_wigtobigwig.chrom_sizes" : "test_data/refs/test.chrom.sizes.tsv",
-    "test_wigtobigwig.output_prefix" : "TEST_WIGTOBIGWIG",
-    "test_wigtobigwig.ncpus" : 1,
-    "test_wigtobigwig.ramGB" : 2,
-    "test_wigtobigwig.disk" : "local-disk 20 HDD"
+  "test_wigtobigwig.chrom_sizes": "test_data/refs/test.chrom.sizes.tsv",
+  "test_wigtobigwig.disk": "local-disk 20 HDD",
+  "test_wigtobigwig.minus_strand_all_wig": "test_data/data/Signal.UniqueMultiple.str2.out.wig",
+  "test_wigtobigwig.minus_strand_unique_wig": "test_data/data/Signal.Unique.str2.out.wig",
+  "test_wigtobigwig.ncpus": 1,
+  "test_wigtobigwig.output_prefix": "TEST_WIGTOBIGWIG",
+  "test_wigtobigwig.plus_strand_all_wig": "test_data/data/Signal.UniqueMultiple.str1.out.wig",
+  "test_wigtobigwig.plus_strand_unique_wig": "test_data/data/Signal.Unique.str1.out.wig",
+  "test_wigtobigwig.ramGB": 2
 }

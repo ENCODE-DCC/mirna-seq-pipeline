@@ -4,11 +4,11 @@ This document contains more detailed information on the inputs, outputs and the 
 
 # CONTENTS
 
-[Software](reference.md#software)  
-[Recommended Software](reference.md#recommended-software)  
-[Inputs](reference.md#inputs)  
-[Reference files](reference.md#getting-reference-files)  
-[Outputs](reference.md#outputs)  
+[Software](reference.md#software)
+[Recommended Software](reference.md#recommended-software)
+[Inputs](reference.md#inputs)
+[Reference files](reference.md#getting-reference-files)
+[Outputs](reference.md#outputs)
 [Output organizer](reference.md#croo)
 
 ## Software
@@ -78,7 +78,7 @@ Following elaborates the meaning of each line in the input file.
 * `mirna_seq_pipeline.chrom_sizes` Is .tsv that contains chromosome sizes. This can be downloaded from [The ENCODE Portal](https://www.encodeproject.org/files/GRCh38_EBV.chrom.sizes/)
 * `mirna_seq_pipeline.experiment_prefix` Is prefix that will be added to important output filenames.
 
-#### Example: 
+#### Example:
 
 Assume the `mirna_seq_pipeline.experiment_prefix` is "FOO_BAR_BAZ". Outputs from replicate 1 will get a prefix rep1FOO_BAR_BAZ, outputs from replicate 2 get a prefix rep2FOO_BAR_BAZ etc.
 
