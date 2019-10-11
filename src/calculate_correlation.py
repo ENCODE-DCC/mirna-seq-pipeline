@@ -7,6 +7,7 @@ __license__ = "MIT"
 
 import argparse
 import json
+
 import pandas as pd
 from qc_utils import QCMetric, QCMetricRecord
 

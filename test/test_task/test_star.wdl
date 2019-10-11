@@ -5,7 +5,7 @@ import "../../mirna_seq_pipeline.wdl" as mirna
 workflow test_star {
     File fastq
     File index
-    File mirna_annotation 
+    File mirna_annotation
     String output_prefix
     Int ncpus
     Int ramGB

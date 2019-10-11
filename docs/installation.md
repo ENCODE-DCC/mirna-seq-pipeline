@@ -18,7 +18,7 @@ Download WDL runner Cromwell from [here](https://github.com/broadinstitute/cromw
 
 ## Docker
 
-Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed. 
+Pipeline code is packaged and distributed in Docker containers, and thus Docker installation is needed.
 Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) or [linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/#upgrade-docker-after-using-the-convenience-script).
 
 ## Caper

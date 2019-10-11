@@ -24,4 +24,4 @@ Description of the pipeline [outputs](docs/reference.md#outputs)
 
 REFERENCE
 ----------
-Reference [here](docs/reference.md) 
+Reference [here](docs/reference.md)

@@ -63,7 +63,7 @@ jobs:
               source ${BASH_ENV}
               docker pull $TAG
               docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-              docker tag $TAG quay.io/encode-dcc/mirna-seq-pipeline:template 
+              docker tag $TAG quay.io/encode-dcc/mirna-seq-pipeline:template
               docker push quay.io/encode-dcc/mirna-seq-pipeline:template
               docker logout
             no_output_timeout: 30m
@@ -73,7 +73,7 @@ jobs:
     steps:
       - checkout
       - run: *make_tag
-      - run: 
+      - run:
           command: |
             pyenv global 3.5.2
             source ${BASH_ENV}
@@ -93,7 +93,7 @@ jobs:
       - singularity/install-go
       - singularity/debian-install-3
       - run: *make_tag
-      - run: 
+      - run:
           command: |
             pyenv global 3.5.2
             source ${BASH_ENV}
@@ -133,7 +133,7 @@ jobs:
       - singularity/debian-install-3
       - run: *make_tag
       - run: *get_star_index
-      - run: 
+      - run:
           command: |
             pyenv global 3.5.2
             source ${BASH_ENV}

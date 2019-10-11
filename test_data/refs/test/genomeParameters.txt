@@ -1,11 +1,11 @@
 ### STAR   --runMode genomeGenerate   --runThreadN 16   --genomeDir /share/samdata/sorenar/miRNA/pipeline/refs/test/   --genomeFastaFiles /share/samdata/sorenar/miRNA/pipeline/refs/test.ref.fasta      --sjdbGTFfile /share/samdata/sorenar/miRNA/pipeline/refs/test.chr19.gtf   --sjdbOverhang 1
 versionGenome	20201
-genomeFastaFiles	/share/samdata/sorenar/miRNA/pipeline/refs/test.ref.fasta 
+genomeFastaFiles	/share/samdata/sorenar/miRNA/pipeline/refs/test.ref.fasta
 genomeSAindexNbases	14
 genomeChrBinNbits	18
 genomeSAsparseD	1
 sjdbOverhang	1
-sjdbFileChrStartEnd	- 
+sjdbFileChrStartEnd	-
 sjdbGTFfile	/share/samdata/sorenar/miRNA/pipeline/refs/test.chr19.gtf
 sjdbGTFchrPrefix	-
 sjdbGTFfeatureExon	exon

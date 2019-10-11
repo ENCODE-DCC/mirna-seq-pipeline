@@ -15,7 +15,7 @@ workflow generate_STAR_index {
     # Resources
 
     # Number of threads
-    Int ncpus 
+    Int ncpus
 
     # Memory in GB
     Int ramGB
