@@ -1,5 +1,6 @@
 # Dockerfile for ENCODE-DCC mirna-seq-pipeline
-FROM ubuntu:16.04
+# base on ubuntu 16.04
+FROM ubuntu@sha256:e10375c69cf9e22989c82b0a87c932a21e33619ee322d6c7ce6a61456f54c30c
 MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
