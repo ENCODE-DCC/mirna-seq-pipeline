@@ -331,3 +331,4 @@ workflows:
             - test_workflow_docker
             - test_workflow_singularity
             - test_workflow_2reps_docker
+            - test_workflow_2reps_singularity
