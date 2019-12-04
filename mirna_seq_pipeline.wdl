@@ -5,14 +5,16 @@
 #CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
 #CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json
 
+import "cutadapt_subworkflow.wdl" as cutadapt_sub
+
 workflow mirna_seq_pipeline {
     #File inputs
 
     #cutadapt
     #Array containing the input fastq files
-    Array[File] fastqs
+    Array[Array[File]] fastqs
     #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
-    Array[File] five_prime_adapters
+    Array[Array[File]] five_prime_adapters
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
 
@@ -50,8 +52,8 @@ workflow mirna_seq_pipeline {
     #Pipeline starts here
 
     scatter (i in range(length(fastqs))) {
-        call cutadapt { input:
-            fastq = fastqs[i],
+        call cutadapt_sub.cutadapt_wf { input:
+            fastqs_to_trim = fastqs[i],
             five_prime_adapters = five_prime_adapters[i],
             three_prime_adapters = three_prime_adapters,
             output_prefix = "rep"+(i+1)+experiment_prefix,
@@ -59,37 +61,39 @@ workflow mirna_seq_pipeline {
             ramGB = cutadapt_ramGB,
             disk = cutadapt_disk,
         }
-
-        call star { input:
-            fastq = cutadapt.trimmed_fastq,
-            index = star_index,
-            annotation = mirna_annotation,
-            output_prefix = "rep"+(i+1)+experiment_prefix,
-            ncpus = star_ncpus,
-            ramGB = star_ramGB,
-            disk = star_disk,
-            }
-
-        call wigtobigwig { input:
-            plus_strand_all_wig = star.plus_strand_all_wig,
-            minus_strand_all_wig = star.minus_strand_all_wig,
-            plus_strand_unique_wig = star.plus_strand_unique_wig,
-            minus_strand_unique_wig = star.minus_strand_unique_wig,
-            chrom_sizes = chrom_sizes,
-            output_prefix = "rep"+(i+1)+experiment_prefix,
-            ncpus = wigtobigwig_ncpus,
-            ramGB = wigtobigwig_ramGB,
-            disk = wigtobigwig_disk,
-        }
     }
+
+#    scatter (i in range(length(fastqs))) {
+#        call star { input:
+#            fastq = cutadapt.trimmed_fastq[i],
+#            index = star_index,
+#            annotation = mirna_annotation,
+#            output_prefix = "rep"+(i+1)+experiment_prefix,
+#            ncpus = star_ncpus,
+#            ramGB = star_ramGB,
+#            disk = star_disk,
+#            }
+
+#        call wigtobigwig { input:
+#            plus_strand_all_wig = star.plus_strand_all_wig,
+#            minus_strand_all_wig = star.minus_strand_all_wig,
+#            plus_strand_unique_wig = star.plus_strand_unique_wig,
+#            minus_strand_unique_wig = star.minus_strand_unique_wig,
+#            chrom_sizes = chrom_sizes,
+#            output_prefix = "rep"+(i+1)+experiment_prefix,
+#            ncpus = wigtobigwig_ncpus,
+#            ramGB = wigtobigwig_ramGB,
+#            disk = wigtobigwig_disk,
+#        }
+#    }
 
     #If there are exactly two replicates, calculate spearman correlation between quants in replicates
-    if (length(fastqs) == 2) {
-        call spearman_correlation { input:
-            quants = star.tsv,
-            output_filename = experiment_prefix+"_spearman.json",
-            }
-    }
+#    if (length(fastqs) == 2) {
+#        call spearman_correlation { input:
+#            quants = star.tsv,
+#            output_filename = experiment_prefix+"_spearman.json",
+#            }
+#    }
 }
 
 #Task definitions
