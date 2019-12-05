@@ -22,11 +22,22 @@ workflow cutadapt_wf {
         }
     }
 
+        call merge_fastqs { input:
+            no3ad_untrimmed_fastqs_ = cutadapt.no3ad_untrimmed_fastq,
+            no5ad_untrimmed_fastqs_ = cutadapt.no5ad_untrimmed_fastq,
+            too_short_fastqs_ = cutadapt.too_short_fastq,
+            trimmed_fastqs_ = cutadapt.trimmed_fastq,
+            output_prefix = output_prefix,
+            ncpus = ncpus,
+            ramGB = ramGB,
+            disk = disk,
+        }
+
     output {
-        Array[File] no3ad_untrimmed_fastq = cutadapt.no3ad_untrimmed_fastq
-        Array[File] no5ad_untrimmed_fastq = cutadapt.no5ad_untrimmed_fastq
-        Array[File] too_short_fastq = cutadapt.too_short_fastq
-        Array[File] trimmed_fastq = cutadapt.trimmed_fastq
+        File no3ad_untrimmed_fastq = merge_fastqs.no3ad_untrimmed_fastq
+        File no5ad_untrimmed_fastq = merge_fastqs.no5ad_untrimmed_fastq
+        File too_short_fastq = merge_fastqs.too_short_fastq
+        File trimmed_fastq = merge_fastqs.trimmed_fastq
     }
 }
 
@@ -64,6 +75,37 @@ task cutadapt {
         File no5ad_untrimmed_fastq = glob("*_NO5AD.fastq")[0]
         File too_short_fastq = glob("*_SHORT_FAIL.fastq")[0]
         File trimmed_fastq = glob("*_trim.fastq")[0]
+    }
+
+    runtime {
+        cpu: ncpus
+        memory: "${ramGB} GB"
+        disks: disk
+    }
+}
+
+task merge_fastqs {
+    Array[File] no3ad_untrimmed_fastqs_
+    Array[File] no5ad_untrimmed_fastqs_
+    Array[File] too_short_fastqs_
+    Array[File] trimmed_fastqs_
+    String output_prefix
+    Int ncpus
+    Int ramGB
+    String disk
+
+    command {
+        cat ${sep=' ' no3ad_untrimmed_fastqs_} > ${output_prefix}_merged_NO3AD.fastq
+        cat ${sep=' ' no5ad_untrimmed_fastqs_} > ${output_prefix}_merged_NO5AD.fastq
+        cat ${sep=' ' too_short_fastqs_} > ${output_prefix}_merged_SHORT_FAIL.fastq
+        cat ${sep=' ' trimmed_fastqs_} > ${output_prefix}_merged_trim.fastq
+    }
+
+    output {
+        File no3ad_untrimmed_fastq = glob("*_merged_NO3AD.fastq")[0]
+        File no5ad_untrimmed_fastq = glob("*_merged_NO5AD.fastq")[0]
+        File too_short_fastq = glob("*_merged_SHORT_FAIL.fastq")[0]
+        File trimmed_fastq = glob("*_merged_trim.fastq")[0]
     }
 
     runtime {

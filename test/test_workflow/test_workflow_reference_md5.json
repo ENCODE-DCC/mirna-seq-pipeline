@@ -8,8 +8,8 @@
   "rep1TEST_WORKFLOW.signal.unique.minus.bigWig": "9c03fca9e38d84b89894d2938a0aedbd",
   "rep1TEST_WORKFLOW.signal.unique.plus.bigWig": "17f94646b3b0ab71fd68d64e448bd6ea",
   "rep1TEST_WORKFLOW.tsv": "f5e62b2ac5dae23e5c214aa10a78ce5a",
-  "rep1TEST_WORKFLOW_NO3AD.fastq": "828ebc177e46fe6ee2afdfde58921b32",
-  "rep1TEST_WORKFLOW_NO5AD.fastq": "d41d8cd98f00b204e9800998ecf8427e",
-  "rep1TEST_WORKFLOW_SHORT_FAIL.fastq": "87a45f7bd5452d76a1d5763c00ad3265",
-  "rep1TEST_WORKFLOW_trim.fastq": "a78444b1ad3e92605489eceb47186e6f"
+  "rep1TEST_WORKFLOW_merged_NO3AD.fastq": "828ebc177e46fe6ee2afdfde58921b32",
+  "rep1TEST_WORKFLOW_merged_NO5AD.fastq": "d41d8cd98f00b204e9800998ecf8427e",
+  "rep1TEST_WORKFLOW_merged_SHORT_FAIL.fastq": "87a45f7bd5452d76a1d5763c00ad3265",
+  "rep1TEST_WORKFLOW_merged_trim.fastq": "a78444b1ad3e92605489eceb47186e6f"
 }
