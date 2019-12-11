@@ -301,7 +301,7 @@ jobs:
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_2reps_input.metadata.json \
+            --metadata_json test_workflow_techreps_input.metadata.json \
             --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
             --outfile test_workflow_techreps_input.result.json
             cat test_workflow_techreps_input.result.json
