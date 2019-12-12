@@ -5,14 +5,16 @@
 #CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
 #CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json
 
+import "cutadapt_subworkflow.wdl" as cutadapt_sub
+
 workflow mirna_seq_pipeline {
     #File inputs
 
     #cutadapt
     #Array containing the input fastq files
-    Array[File] fastqs
+    Array[Array[File]] fastqs
     #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
-    Array[File] five_prime_adapters
+    Array[Array[File]] five_prime_adapters
     #Fasta file with 3' adapter sequence(s)
     File three_prime_adapters
 
@@ -50,8 +52,8 @@ workflow mirna_seq_pipeline {
     #Pipeline starts here
 
     scatter (i in range(length(fastqs))) {
-        call cutadapt { input:
-            fastq = fastqs[i],
+        call cutadapt_sub.cutadapt_wf as cutadapt { input:
+            fastqs_to_trim = fastqs[i],
             five_prime_adapters = five_prime_adapters[i],
             three_prime_adapters = three_prime_adapters,
             output_prefix = "rep"+(i+1)+experiment_prefix,
@@ -59,16 +61,18 @@ workflow mirna_seq_pipeline {
             ramGB = cutadapt_ramGB,
             disk = cutadapt_disk,
         }
+    }
 
+    scatter (i in range(length(fastqs))) {
         call star { input:
-            fastq = cutadapt.trimmed_fastq,
+            fastq = cutadapt.trimmed_fastq[i],
             index = star_index,
             annotation = mirna_annotation,
             output_prefix = "rep"+(i+1)+experiment_prefix,
             ncpus = star_ncpus,
             ramGB = star_ramGB,
             disk = star_disk,
-            }
+        }
 
         call wigtobigwig { input:
             plus_strand_all_wig = star.plus_strand_all_wig,
@@ -93,49 +97,6 @@ workflow mirna_seq_pipeline {
 }
 
 #Task definitions
-
-task cutadapt {
-    File fastq
-    File five_prime_adapters
-    File three_prime_adapters
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
-
-    command {
-        cutadapt \
-            -a file:${three_prime_adapters} \
-            -e 0.25 \
-            --match-read-wildcards \
-            --untrimmed-output=${output_prefix + "_NO3AD.fastq"} \
-            ${fastq} \
-            | cutadapt \
-            -e 0.34 \
-            --match-read-wildcards \
-            --no-indels \
-            -m 15 \
-            -O 6 \
-            -n 1 \
-            -g file:${five_prime_adapters} \
-            --untrimmed-output=${output_prefix + "_NO5AD.fastq"} \
-            --too-short-output=${output_prefix + "_SHORT_FAIL.fastq"} \
-            - > ${output_prefix + "_trim.fastq"}
-    }
-
-    output {
-        File no3ad_untrimmed_fastq = glob("*_NO3AD.fastq")[0]
-        File no5ad_untrimmed_fastq = glob("*_NO5AD.fastq")[0]
-        File too_short_fastq = glob("*_SHORT_FAIL.fastq")[0]
-        File trimmed_fastq = glob("*_trim.fastq")[0]
-    }
-
-    runtime {
-        cpu: ncpus
-        memory: "${ramGB} GB"
-        disks: disk
-    }
-}
 
 task star {
     File fastq

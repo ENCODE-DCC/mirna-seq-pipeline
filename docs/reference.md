@@ -49,8 +49,8 @@ A typical input json file looks like this:
 
 ```
 {
-    "mirna_seq_pipeline.fastqs" : ["gs://mirna-seq-pipeline/inputs/ENCSR569QVM/ENCFF119JCH_rep1.fastq.gz","gs://mirna-seq-pipeline/inputs/ENCSR569QVM/ENCFF756CSN_rep2.fastq.gz"],
-    "mirna_seq_pipeline.five_prime_adapters" : ["gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set3.fasta","gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set4.fasta"],
+    "mirna_seq_pipeline.fastqs" : [["gs://mirna-seq-pipeline/inputs/ENCSR569QVM/ENCFF119JCH_rep1.fastq.gz"],["gs://mirna-seq-pipeline/inputs/ENCSR569QVM/ENCFF756CSN_rep2.fastq.gz"]],
+    "mirna_seq_pipeline.five_prime_adapters" : [["gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set3.fasta"],["gs://mirna-seq-pipeline/full_sized_reference_files/adapters/five_prime_adapter_set4.fasta"]],
     "mirna_seq_pipeline.three_prime_adapters" : "gs://mirna-seq-pipeline/full_sized_reference_files/adapters/three_prime_adapter.fasta",
     "mirna_seq_pipeline.star_index" : "gs://mirna-seq-pipeline/full_sized_reference_files/Star_index_GRCh38.tar.gz",
     "mirna_seq_pipeline.mirna_annotation" : "gs://mirna-seq-pipeline/full_sized_reference_files/ENCFF628BVT_mirna_anno.gtf.gz",
@@ -70,8 +70,15 @@ A typical input json file looks like this:
 
 Following elaborates the meaning of each line in the input file.
 
-* `mirna_seq_pipeline.fastqs` Is a list of input fastq files, one for each replicate.
-* `mirna_seq_pipeline.five_prime_adapters` Is a list of 5' adapter fasta files, one for each replicate. Note: order of this list should correspond to the order of `mirna_seq_pipeline.fastqs`.
+* `mirna_seq_pipeline.fastqs` Is a list of lists of input fastq files, one for each replicate. Typically the sublists contain only one element, except in the case when each replicate consists of multiple technical replicates represented by separate gzipped fastq files.
+* `mirna_seq_pipeline.five_prime_adapters` Is a list of lists of 5' adapter fasta files, one for each replicate. Note: structure of this list should correspond to the structure of `mirna_seq_pipeline.fastqs`. Typically the sublists contain only one element, except in the case when each replicate consists of multiple technical replicates. Note that even in the case where all the techical replicates use same 5' adapters, the same file name needs to be repeated as many times as there are technical replicates.
+
+#### Example:
+
+Assume the experiment consists of two replicates, A and B. Further assume that replicate A consists of three technical replicates (A1.fastq.gz, A2.fastq.gz, A3.fastq.gz) and replicate B consists of only one technical replicate (B1.fastq.gz). Suppose the 5' adapter set1 was used for A1.fastq.gz and A2.fastq.gz, 5' adapter set 4 was used for A3.fastq.gz and finally that 5' adapter set2 was used for B.fastq.gz. In this case the inputs for fastqs and 5' adapters would be as follows:
+* `"mirna_seq_pipeline.fastqs" : [["A1.fastq.gz", "A2.fastq.gz", "A3.fastq.gz"], ["B1.fastq.gz"]]`
+* `"mirna_seq_pipeline.five_prime_adapters" : [["five_prime_adapter_set1.fasta", "five_prime_adapter_set1.fasta", "five_prime_adapter_set4.fasta"], ["five_prime_adapter_set3.fasta"]],`
+
 * `mirna_seq_pipeline.three_prime_adapters` Is the fasta file containing 3' adapters. Same set is used for all the replicates.
 * `mirna_seq_pipeline.star_index` Is the gzipped tar archive that contains STAR index. GRCh38 based on Gencode V24 version is available for download on [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF033AVX/).
 * `mirna_seq_pipeline.mirna_annotation` Is the gzipped .gtf(.gz) file containing miRNA annotations. Gencode V24 version available for download on [The ENCODE Portal](https://www.encodeproject.org/files/ENCFF628BVT/).
@@ -104,7 +111,7 @@ Cromwell will store outputs for each task under directory cromwell-executions/[W
 
 To make the experience of looking at the outputs we recommend using [the cromwell output organizer](https://github.com/ENCODE-DCC/croo). The output definition file (`output_definition.json`) that the output organizer requires is provided as a part of this github repo.
 
-#### Task Cutadapt
+#### Task Cutadapt 
 
 * `no3ad_untrimmed_fastq` .fastq with the reads in which the 3' adapter was not found.
 * `no5ad_untrimmed_fastq` .fastq with the reads in which the 5' adapter was not found.
