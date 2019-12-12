@@ -285,6 +285,55 @@ jobs:
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_2reps_input.result.json
           no_output_timeout: 30m
 
+  test_workflow_techreps_docker:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
+            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
+            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
+            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
+            mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
+            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
+            --metadata_json test_workflow_techreps_input.metadata.json \
+            --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
+            --outfile test_workflow_techreps_input.result.json
+            cat test_workflow_techreps_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_techreps_input.result.json
+          no_output_timeout: 30m
+
+  test_workflow_techreps_singularity:
+    <<: *machine_defaults
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - singularity/install-go
+      - singularity/debian-install-3
+      - run: *make_tag
+      - run: *get_star_index
+      - run:
+          command: |
+            pyenv global 3.5.2
+            source ${BASH_ENV}
+            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG singularity
+            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
+            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
+            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
+            mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
+            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
+            --metadata_json test_workflow_techreps_input.metadata.json \
+            --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
+            --outfile test_workflow_techreps_input.result.json
+            cat test_workflow_techreps_input.result.json
+            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_techreps_input.result.json
+          no_output_timeout: 30m
+
 # Workflow
 workflows:
   build_workflow:
@@ -320,6 +369,12 @@ workflows:
       - test_workflow_2reps_singularity:
           requires:
             - build
+      - test_workflow_techreps_docker:
+          requires:
+            - build
+      - test_workflow_techreps_singularity:
+          requires:
+            - build
       - push_template:
           requires:
             - test_cutadapt_docker
@@ -331,3 +386,6 @@ workflows:
             - test_workflow_docker
             - test_workflow_singularity
             - test_workflow_2reps_docker
+            - test_workflow_2reps_singularity
+            - test_workflow_techreps_docker
+            - test_workflow_techreps_singularity

@@ -1,6 +1,6 @@
 # Test workflow for cutadapt task in ENCODE micro rna seq pipeline
 
-import "../../mirna_seq_pipeline.wdl" as mirna
+import "cutadapt_subworkflow.wdl" as cutadapt
 
 workflow test_cutadapt {
     File fastq
@@ -11,7 +11,7 @@ workflow test_cutadapt {
     Int ramGB
     String disk
 
-    call mirna.cutadapt { input:
+    call cutadapt.cutadapt { input:
         fastq = fastq,
         five_prime_adapters = five_prime_adapters,
         three_prime_adapters = three_prime_adapters,
