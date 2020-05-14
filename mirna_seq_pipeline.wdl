@@ -53,45 +53,45 @@ workflow mirna_seq_pipeline {
 
     scatter (i in range(length(fastqs))) {
         call cutadapt_sub.cutadapt_wf as cutadapt { input:
-            fastqs_to_trim = fastqs[i],
-            five_prime_adapters = five_prime_adapters[i],
-            three_prime_adapters = three_prime_adapters,
-            output_prefix = "rep"+(i+1)+experiment_prefix,
-            ncpus = cutadapt_ncpus,
-            ramGB = cutadapt_ramGB,
-            disk = cutadapt_disk,
+            fastqs_to_trim=fastqs[i],
+            five_prime_adapters=five_prime_adapters[i],
+            three_prime_adapters=three_prime_adapters,
+            output_prefix="rep"+(i+1)+experiment_prefix,
+            ncpus=cutadapt_ncpus,
+            ramGB=cutadapt_ramGB,
+            disk=cutadapt_disk,
         }
     }
 
     scatter (i in range(length(fastqs))) {
         call star { input:
-            fastq = cutadapt.trimmed_fastq[i],
-            index = star_index,
-            annotation = mirna_annotation,
-            output_prefix = "rep"+(i+1)+experiment_prefix,
-            ncpus = star_ncpus,
-            ramGB = star_ramGB,
-            disk = star_disk,
+            fastq=cutadapt.trimmed_fastq[i],
+            index=star_index,
+            annotation=mirna_annotation,
+            output_prefix="rep"+(i+1)+experiment_prefix,
+            ncpus=star_ncpus,
+            ramGB=star_ramGB,
+            disk=star_disk,
         }
 
         call wigtobigwig { input:
-            plus_strand_all_wig = star.plus_strand_all_wig,
-            minus_strand_all_wig = star.minus_strand_all_wig,
-            plus_strand_unique_wig = star.plus_strand_unique_wig,
-            minus_strand_unique_wig = star.minus_strand_unique_wig,
-            chrom_sizes = chrom_sizes,
-            output_prefix = "rep"+(i+1)+experiment_prefix,
-            ncpus = wigtobigwig_ncpus,
-            ramGB = wigtobigwig_ramGB,
-            disk = wigtobigwig_disk,
+            plus_strand_all_wig=star.plus_strand_all_wig,
+            minus_strand_all_wig=star.minus_strand_all_wig,
+            plus_strand_unique_wig=star.plus_strand_unique_wig,
+            minus_strand_unique_wig=star.minus_strand_unique_wig,
+            chrom_sizes=chrom_sizes,
+            output_prefix="rep"+(i+1)+experiment_prefix,
+            ncpus=wigtobigwig_ncpus,
+            ramGB=wigtobigwig_ramGB,
+            disk=wigtobigwig_disk,
         }
     }
 
     #If there are exactly two replicates, calculate spearman correlation between quants in replicates
     if (length(fastqs) == 2) {
         call spearman_correlation { input:
-            quants = star.tsv,
-            output_filename = experiment_prefix+"_spearman.json",
+            quants=star.tsv,
+            output_filename=experiment_prefix+"_spearman.json",
             }
     }
 }

@@ -27,12 +27,12 @@ workflow generate_STAR_index {
     String disks = "local-disk 50 SSD"
 
     call generate_index { input:
-        genome_file = reference_sequence,
-        annotation_file = annotation,
-        output_file = output_filename,
-        ncpus = ncpus,
-        ramGB = ramGB,
-        disks = disks,
+        genome_file=reference_sequence,
+        annotation_file=annotation,
+        output_file=output_filename,
+        ncpus=ncpus,
+        ramGB=ramGB,
+        disks=disks,
     }
 }
 

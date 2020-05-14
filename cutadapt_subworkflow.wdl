@@ -12,25 +12,25 @@ workflow cutadapt_wf {
 
     scatter (i in range(length(fastqs_to_trim))) {
         call cutadapt { input:
-            fastq = fastqs_to_trim[i],
-            five_prime_adapters = five_prime_adapters[i],
-            three_prime_adapters = three_prime_adapters,
-            output_prefix = output_prefix,
-            ncpus = ncpus,
-            ramGB = ramGB,
-            disk = disk,
+            fastq=fastqs_to_trim[i],
+            five_prime_adapters=five_prime_adapters[i],
+            three_prime_adapters=three_prime_adapters,
+            output_prefix=output_prefix,
+            ncpus=ncpus,
+            ramGB=ramGB,
+            disk=disk,
         }
     }
 
         call merge_fastqs { input:
-            no3ad_untrimmed_fastqs_ = cutadapt.no3ad_untrimmed_fastq,
-            no5ad_untrimmed_fastqs_ = cutadapt.no5ad_untrimmed_fastq,
-            too_short_fastqs_ = cutadapt.too_short_fastq,
-            trimmed_fastqs_ = cutadapt.trimmed_fastq,
-            output_prefix = output_prefix,
-            ncpus = ncpus,
-            ramGB = ramGB,
-            disk = disk,
+            no3ad_untrimmed_fastqs_=cutadapt.no3ad_untrimmed_fastq,
+            no5ad_untrimmed_fastqs_=cutadapt.no5ad_untrimmed_fastq,
+            too_short_fastqs_=cutadapt.too_short_fastq,
+            trimmed_fastqs_=cutadapt.trimmed_fastq,
+            output_prefix=output_prefix,
+            ncpus=ncpus,
+            ramGB=ramGB,
+            disk=disk,
         }
 
     output {

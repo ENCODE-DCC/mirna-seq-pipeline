@@ -12,12 +12,12 @@ workflow test_cutadapt {
     String disk
 
     call cutadapt.cutadapt { input:
-        fastq = fastq,
-        five_prime_adapters = five_prime_adapters,
-        three_prime_adapters = three_prime_adapters,
-        output_prefix = output_prefix,
-        ncpus = ncpus,
-        ramGB = ramGB,
-        disk = disk,
+        fastq=fastq,
+        five_prime_adapters=five_prime_adapters,
+        three_prime_adapters=three_prime_adapters,
+        output_prefix=output_prefix,
+        ncpus=ncpus,
+        ramGB=ramGB,
+        disk=disk,
     }
 }
