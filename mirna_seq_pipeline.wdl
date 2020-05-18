@@ -127,14 +127,14 @@ task star {
     }
 
     output {
-        File bam = glob("~{output_prefix}.bam")[0]
-        File tsv = glob("*.tsv")[0]
-        File plus_strand_all_wig = glob("Signal.UniqueMultiple.str1.out.wig")[0]
-        File minus_strand_all_wig = glob("Signal.UniqueMultiple.str2.out.wig")[0]
-        File plus_strand_unique_wig = glob("Signal.Unique.str1.out.wig")[0]
-        File minus_strand_unique_wig = glob("Signal.Unique.str2.out.wig")[0]
-        File star_qc_json = glob("*_star_qc.json")[0]
-        File star_qc_log = glob("star_qc.log")[0]
+        File bam = "~{output_prefix}.bam"
+        File tsv = "~{output_prefix}.tsv"
+        File plus_strand_all_wig = "Signal.UniqueMultiple.str1.out.wig"
+        File minus_strand_all_wig = "Signal.UniqueMultiple.str2.out.wig"
+        File plus_strand_unique_wig = "Signal.Unique.str1.out.wig"
+        File minus_strand_unique_wig = "Signal.Unique.str2.out.wig"
+        File star_qc_json = "~{output_prefix}_star_qc.json"
+        File star_qc_log = "star_qc.log"
     }
 
     runtime {
@@ -165,10 +165,10 @@ task wigtobigwig {
     }
 
     output {
-        File plus_strand_all_bigwig = glob("*.signal.all.plus.bigWig")[0]
-        File minus_strand_all_bigwig = glob("*.signal.all.minus.bigWig")[0]
-        File plus_strand_unique_bigwig = glob("*.signal.unique.plus.bigWig")[0]
-        File minus_strand_unique_bigwig = glob("*.signal.unique.minus.bigWig")[0]
+        File plus_strand_all_bigwig = "~{output_prefix}.signal.all.plus.bigWig"
+        File minus_strand_all_bigwig = "~{output_prefix}.signal.all.minus.bigWig"
+        File plus_strand_unique_bigwig = "~{output_prefix}.signal.unique.plus.bigWig"
+        File minus_strand_unique_bigwig = "~{output_prefix}.signal.unique.minus.bigWig"
     }
 
     runtime {
@@ -189,7 +189,7 @@ task spearman_correlation {
     }
 
     output {
-        File spearman_json = glob("*spearman.json")[0]
+        File spearman_json = output_filename 
     }
 
     runtime {
@@ -213,7 +213,7 @@ task bamtosam {
     }
 
     output {
-        File samfile = glob("~{output_sam}")[0]
+        File samfile = output_sam
     }
 
     runtime {

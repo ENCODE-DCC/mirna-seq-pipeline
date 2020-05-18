@@ -77,10 +77,10 @@ task cutadapt {
     }
 
     output {
-        File no3ad_untrimmed_fastq = glob("*_NO3AD.fastq")[0]
-        File no5ad_untrimmed_fastq = glob("*_NO5AD.fastq")[0]
-        File too_short_fastq = glob("*_SHORT_FAIL.fastq")[0]
-        File trimmed_fastq = glob("*_trim.fastq")[0]
+        File no3ad_untrimmed_fastq = "~{output_prefix}_NO3AD.fastq"
+        File no5ad_untrimmed_fastq = "~{output_prefix}_NO5AD.fastq"
+        File too_short_fastq = "~{output_prefix}_SHORT_FAIL.fastq"
+        File trimmed_fastq = "~{output_prefix}_trim.fastq"
     }
 
     runtime {
@@ -110,10 +110,10 @@ task merge_fastqs {
     }
 
     output {
-        File no3ad_untrimmed_fastq = glob("*_merged_NO3AD.fastq")[0]
-        File no5ad_untrimmed_fastq = glob("*_merged_NO5AD.fastq")[0]
-        File too_short_fastq = glob("*_merged_SHORT_FAIL.fastq")[0]
-        File trimmed_fastq = glob("*_merged_trim.fastq")[0]
+        File no3ad_untrimmed_fastq = "~{output_prefix}_merged_NO3AD.fastq"
+        File no5ad_untrimmed_fastq = "~{output_prefix}_merged_NO5AD.fastq"
+        File too_short_fastq = "~{output_prefix}_merged_SHORT_FAIL.fastq"
+        File trimmed_fastq = "~{output_prefix}_merged_trim.fastq"
     }
 
     runtime {
