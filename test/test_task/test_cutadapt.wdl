@@ -1,15 +1,19 @@
+version 1.0
+
 # Test workflow for cutadapt task in ENCODE micro rna seq pipeline
 
 import "cutadapt_subworkflow.wdl" as cutadapt
 
 workflow test_cutadapt {
-    File fastq
-    File five_prime_adapters
-    File three_prime_adapters
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File fastq
+        File five_prime_adapters
+        File three_prime_adapters
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     call cutadapt.cutadapt { input:
         fastq=fastq,

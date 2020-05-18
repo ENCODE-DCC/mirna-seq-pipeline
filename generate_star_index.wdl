@@ -1,3 +1,5 @@
+version 1.0
+
 # ENCODE micro rna seq pipeline: generate star index
 # Maintainer: Otto Jolanki
 
@@ -5,26 +7,17 @@
 #CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.1
 
 workflow generate_STAR_index {
-    # File inputs
-    # Reference .fasta
-    File reference_sequence
-
-    # Annotation .gtf
-    File annotation
-
-    # Output filename
-    String output_filename
-
-    # Resources
-
-    # Number of threads
-    Int ncpus
-
-    # Memory in GB
-    Int ramGB
-
-    # Disk space
-    String disks = "local-disk 50 SSD"
+    input {
+        # Reference .fasta
+        File reference_sequence
+        # Annotation .gtf
+        File annotation
+        # Output filename
+        String output_filename
+        Int ncpus
+        Int ramGB
+        String disks = "local-disk 50 SSD"
+    }
 
     call generate_index { input:
         genome_file=reference_sequence,
@@ -37,29 +30,31 @@ workflow generate_STAR_index {
 }
 
 task generate_index {
-    File genome_file
-    File annotation_file
-    String output_file
-    Int ncpus
-    Int ramGB
-    String disks
+    input {
+        File genome_file
+        File annotation_file
+        String output_file
+        Int ncpus
+        Int ramGB
+        String disks
+    }
 
     command {
         python3 $(which generate_star_index.py) \
-            --ncpus ${ncpus} \
-            --annotation_file ${annotation_file} \
-            --genome_file ${genome_file} \
-            --output_file ${output_file}
+            --ncpus ~{ncpus} \
+            --annotation_file ~{annotation_file} \
+            --genome_file ~{genome_file} \
+            --output_file ~{output_file}
     }
 
     output {
-        File star_index = glob(output_file)[0]
-        File star_log = glob("generate_star_index.log")[0]
+        File star_index = output_file
+        File star_log = "generate_star_index.log"
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disks
     }
 }

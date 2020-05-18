@@ -1,3 +1,5 @@
+version 1.0
+
 # ENCODE micro rna seq pipeline: main pipeline
 # Maintainer: Otto Jolanki
 
@@ -8,48 +10,31 @@
 import "cutadapt_subworkflow.wdl" as cutadapt_sub
 
 workflow mirna_seq_pipeline {
-    #File inputs
-
-    #cutadapt
-    #Array containing the input fastq files
-    Array[Array[File]] fastqs
-    #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
-    Array[Array[File]] five_prime_adapters
-    #Fasta file with 3' adapter sequence(s)
-    File three_prime_adapters
-
-    #star
-    #tar.gz archive that contains star index
-    File star_index
-    #micro-rna annotations
-    File mirna_annotation
-
-    #wigtobigwig
-    #tsv with chromosome sizes
-    File chrom_sizes
-
-    #common
-    #Prefix for outputs (additionally replicate number will be added)
-    String experiment_prefix
-
-    #Resources
-
-    #cutadapt
-    Int cutadapt_ncpus
-    Int cutadapt_ramGB
-    String cutadapt_disk
-
-    #star
-    Int star_ncpus
-    Int star_ramGB
-    String star_disk
-
-    #wigtobigwig
-    Int wigtobigwig_ncpus
-    Int wigtobigwig_ramGB
-    String wigtobigwig_disk
-
-    #Pipeline starts here
+    input {
+        #Array containing the input fastq files
+        Array[Array[File]] fastqs
+        #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
+        Array[Array[File]] five_prime_adapters
+        #Fasta file with 3' adapter sequence(s)
+        File three_prime_adapters
+        #tar.gz archive that contains star index
+        File star_index
+        #micro-rna annotations
+        File mirna_annotation
+        #tsv with chromosome sizes
+        File chrom_sizes
+        #Prefix for outputs (additionally replicate number will be added)
+        String experiment_prefix
+        Int cutadapt_ncpus
+        Int cutadapt_ramGB
+        String cutadapt_disk
+        Int star_ncpus
+        Int star_ramGB
+        String star_disk
+        Int wigtobigwig_ncpus
+        Int wigtobigwig_ramGB
+        String wigtobigwig_disk
+    }
 
     scatter (i in range(length(fastqs))) {
         call cutadapt_sub.cutadapt_wf as cutadapt { input:
@@ -99,22 +84,24 @@ workflow mirna_seq_pipeline {
 #Task definitions
 
 task star {
-    File fastq
-    File index
-    File annotation
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File fastq
+        File index
+        File annotation
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
-        tar -xzvf ${index}
-        gzip -cd ${annotation} > anno.gtf
+        tar -xzvf ~{index}
+        gzip -cd ~{annotation} > anno.gtf
         STAR \
             --genomeDir out \
-            --readFilesIn ${fastq} \
+            --readFilesIn ~{fastq} \
             --sjdbGTFfile anno.gtf \
-            --runThreadN ${ncpus} \
+            --runThreadN ~{ncpus} \
             --alignEndsType EndToEnd \
             --outFilterMismatchNmax 1 \
             --outFilterMultimapScoreRange 0 \
@@ -131,74 +118,78 @@ task star {
             --outWigType wiggle \
             --outWigStrand Stranded \
             --outWigNorm RPM
-        mv Aligned.sortedByCoord.out.bam ${output_prefix}.bam
-        mv ReadsPerGene.out.tab ${output_prefix}.tsv
-        mv Log.final.out ${output_prefix}.Log.final.out
-        python3  $(which make_star_qc.py) --quants ${output_prefix}.tsv \
-                                          --star_log ${output_prefix}.Log.final.out \
-                                          --output_filename ${output_prefix}_star_qc.json
+        mv Aligned.sortedByCoord.out.bam ~{output_prefix}.bam
+        mv ReadsPerGene.out.tab ~{output_prefix}.tsv
+        mv Log.final.out ~{output_prefix}.Log.final.out
+        python3  $(which make_star_qc.py) --quants ~{output_prefix}.tsv \
+                                          --star_log ~{output_prefix}.Log.final.out \
+                                          --output_filename ~{output_prefix}_star_qc.json
     }
 
     output {
-        File bam = glob("${output_prefix}.bam")[0]
-        File tsv = glob("*.tsv")[0]
-        File plus_strand_all_wig = glob("Signal.UniqueMultiple.str1.out.wig")[0]
-        File minus_strand_all_wig = glob("Signal.UniqueMultiple.str2.out.wig")[0]
-        File plus_strand_unique_wig = glob("Signal.Unique.str1.out.wig")[0]
-        File minus_strand_unique_wig = glob("Signal.Unique.str2.out.wig")[0]
-        File star_qc_json = glob("*_star_qc.json")[0]
-        File star_qc_log = glob("star_qc.log")[0]
+        File bam = "~{output_prefix}.bam"
+        File tsv = "~{output_prefix}.tsv"
+        File plus_strand_all_wig = "Signal.UniqueMultiple.str1.out.wig"
+        File minus_strand_all_wig = "Signal.UniqueMultiple.str2.out.wig"
+        File plus_strand_unique_wig = "Signal.Unique.str1.out.wig"
+        File minus_strand_unique_wig = "Signal.Unique.str2.out.wig"
+        File star_qc_json = "~{output_prefix}_star_qc.json"
+        File star_qc_log = "star_qc.log"
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
 
 task wigtobigwig {
-    File plus_strand_all_wig
-    File minus_strand_all_wig
-    File plus_strand_unique_wig
-    File minus_strand_unique_wig
-    File chrom_sizes
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File plus_strand_all_wig
+        File minus_strand_all_wig
+        File plus_strand_unique_wig
+        File minus_strand_unique_wig
+        File chrom_sizes
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
-        wigToBigWig ${plus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.plus.bigWig
-        wigToBigWig ${minus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.minus.bigWig
-        wigToBigWig ${plus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.plus.bigWig
-        wigToBigWig ${minus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.minus.bigWig
+        wigToBigWig ~{plus_strand_all_wig} ~{chrom_sizes} ~{output_prefix}.signal.all.plus.bigWig
+        wigToBigWig ~{minus_strand_all_wig} ~{chrom_sizes} ~{output_prefix}.signal.all.minus.bigWig
+        wigToBigWig ~{plus_strand_unique_wig} ~{chrom_sizes} ~{output_prefix}.signal.unique.plus.bigWig
+        wigToBigWig ~{minus_strand_unique_wig} ~{chrom_sizes} ~{output_prefix}.signal.unique.minus.bigWig
     }
 
     output {
-        File plus_strand_all_bigwig = glob("*.signal.all.plus.bigWig")[0]
-        File minus_strand_all_bigwig = glob("*.signal.all.minus.bigWig")[0]
-        File plus_strand_unique_bigwig = glob("*.signal.unique.plus.bigWig")[0]
-        File minus_strand_unique_bigwig = glob("*.signal.unique.minus.bigWig")[0]
+        File plus_strand_all_bigwig = "~{output_prefix}.signal.all.plus.bigWig"
+        File minus_strand_all_bigwig = "~{output_prefix}.signal.all.minus.bigWig"
+        File plus_strand_unique_bigwig = "~{output_prefix}.signal.unique.plus.bigWig"
+        File minus_strand_unique_bigwig = "~{output_prefix}.signal.unique.minus.bigWig"
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
 
 task spearman_correlation {
-    Array[File] quants
-    String output_filename
+    input {
+        Array[File] quants
+        String output_filename
+    }
 
     command {
-        python3 $(which calculate_correlation.py) --quants ${sep=' ' quants} --output_filename ${output_filename}
+        python3 $(which calculate_correlation.py) --quants ~{sep=' ' quants} --output_filename ~{output_filename}
     }
 
     output {
-        File spearman_json = glob("*spearman.json")[0]
+        File spearman_json = output_filename 
     }
 
     runtime {
@@ -209,23 +200,25 @@ task spearman_correlation {
 }
 
 task bamtosam {
-    File bamfile
-    String output_sam
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File bamfile
+        String output_sam
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
-        samtools view ${bamfile} > ${output_sam}
+        samtools view ~{bamfile} > ~{output_sam}
     }
 
     output {
-        File samfile = glob("${output_sam}")[0]
+        File samfile = output_sam
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
