@@ -1,14 +1,18 @@
+version 1.0
+
 # ENCODE micro rna seq pipeline: cutadapt subworkflow
 # Maintainer: Otto Jolanki
 
 workflow cutadapt_wf {
-    Array[File] fastqs_to_trim
-    Array[File] five_prime_adapters
-    File three_prime_adapters
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        Array[File] fastqs_to_trim
+        Array[File] five_prime_adapters
+        File three_prime_adapters
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     scatter (i in range(length(fastqs_to_trim))) {
         call cutadapt { input:
@@ -42,13 +46,15 @@ workflow cutadapt_wf {
 }
 
 task cutadapt {
-    File fastq
-    File five_prime_adapters
-    File three_prime_adapters
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File fastq
+        File five_prime_adapters
+        File three_prime_adapters
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
         cutadapt \
@@ -85,14 +91,16 @@ task cutadapt {
 }
 
 task merge_fastqs {
-    Array[File] no3ad_untrimmed_fastqs_
-    Array[File] no5ad_untrimmed_fastqs_
-    Array[File] too_short_fastqs_
-    Array[File] trimmed_fastqs_
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        Array[File] no3ad_untrimmed_fastqs_
+        Array[File] no5ad_untrimmed_fastqs_
+        Array[File] too_short_fastqs_
+        Array[File] trimmed_fastqs_
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
         cat ${sep=' ' no3ad_untrimmed_fastqs_} > ${output_prefix}_merged_NO3AD.fastq

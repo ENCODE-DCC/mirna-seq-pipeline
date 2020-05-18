@@ -1,3 +1,5 @@
+version 1.0
+
 # ENCODE micro rna seq pipeline: main pipeline
 # Maintainer: Otto Jolanki
 
@@ -8,48 +10,31 @@
 import "cutadapt_subworkflow.wdl" as cutadapt_sub
 
 workflow mirna_seq_pipeline {
-    #File inputs
-
-    #cutadapt
-    #Array containing the input fastq files
-    Array[Array[File]] fastqs
-    #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
-    Array[Array[File]] five_prime_adapters
-    #Fasta file with 3' adapter sequence(s)
-    File three_prime_adapters
-
-    #star
-    #tar.gz archive that contains star index
-    File star_index
-    #micro-rna annotations
-    File mirna_annotation
-
-    #wigtobigwig
-    #tsv with chromosome sizes
-    File chrom_sizes
-
-    #common
-    #Prefix for outputs (additionally replicate number will be added)
-    String experiment_prefix
-
-    #Resources
-
-    #cutadapt
-    Int cutadapt_ncpus
-    Int cutadapt_ramGB
-    String cutadapt_disk
-
-    #star
-    Int star_ncpus
-    Int star_ramGB
-    String star_disk
-
-    #wigtobigwig
-    Int wigtobigwig_ncpus
-    Int wigtobigwig_ramGB
-    String wigtobigwig_disk
-
-    #Pipeline starts here
+    input {
+        #Array containing the input fastq files
+        Array[Array[File]] fastqs
+        #Array containing Fasta files with 5' adapter sequence(s), in the same order as the fastqs
+        Array[Array[File]] five_prime_adapters
+        #Fasta file with 3' adapter sequence(s)
+        File three_prime_adapters
+        #tar.gz archive that contains star index
+        File star_index
+        #micro-rna annotations
+        File mirna_annotation
+        #tsv with chromosome sizes
+        File chrom_sizes
+        #Prefix for outputs (additionally replicate number will be added)
+        String experiment_prefix
+        Int cutadapt_ncpus
+        Int cutadapt_ramGB
+        String cutadapt_disk
+        Int star_ncpus
+        Int star_ramGB
+        String star_disk
+        Int wigtobigwig_ncpus
+        Int wigtobigwig_ramGB
+        String wigtobigwig_disk
+    }
 
     scatter (i in range(length(fastqs))) {
         call cutadapt_sub.cutadapt_wf as cutadapt { input:
@@ -99,13 +84,15 @@ workflow mirna_seq_pipeline {
 #Task definitions
 
 task star {
-    File fastq
-    File index
-    File annotation
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File fastq
+        File index
+        File annotation
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
         tar -xzvf ${index}
@@ -158,15 +145,17 @@ task star {
 }
 
 task wigtobigwig {
-    File plus_strand_all_wig
-    File minus_strand_all_wig
-    File plus_strand_unique_wig
-    File minus_strand_unique_wig
-    File chrom_sizes
-    String output_prefix
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File plus_strand_all_wig
+        File minus_strand_all_wig
+        File plus_strand_unique_wig
+        File minus_strand_unique_wig
+        File chrom_sizes
+        String output_prefix
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
         wigToBigWig ${plus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.plus.bigWig
@@ -190,8 +179,10 @@ task wigtobigwig {
 }
 
 task spearman_correlation {
-    Array[File] quants
-    String output_filename
+    input {
+        Array[File] quants
+        String output_filename
+    }
 
     command {
         python3 $(which calculate_correlation.py) --quants ${sep=' ' quants} --output_filename ${output_filename}
@@ -209,11 +200,13 @@ task spearman_correlation {
 }
 
 task bamtosam {
-    File bamfile
-    String output_sam
-    Int ncpus
-    Int ramGB
-    String disk
+    input {
+        File bamfile
+        String output_sam
+        Int ncpus
+        Int ramGB
+        String disk
+    }
 
     command {
         samtools view ${bamfile} > ${output_sam}
