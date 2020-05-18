@@ -58,11 +58,11 @@ task cutadapt {
 
     command {
         cutadapt \
-            -a file:${three_prime_adapters} \
+            -a file:~{three_prime_adapters} \
             -e 0.25 \
             --match-read-wildcards \
-            --untrimmed-output=${output_prefix + "_NO3AD.fastq"} \
-            ${fastq} \
+            --untrimmed-output=~{output_prefix + "_NO3AD.fastq"} \
+            ~{fastq} \
             | cutadapt \
             -e 0.34 \
             --match-read-wildcards \
@@ -70,10 +70,10 @@ task cutadapt {
             -m 15 \
             -O 6 \
             -n 1 \
-            -g file:${five_prime_adapters} \
-            --untrimmed-output=${output_prefix + "_NO5AD.fastq"} \
-            --too-short-output=${output_prefix + "_SHORT_FAIL.fastq"} \
-            - > ${output_prefix + "_trim.fastq"}
+            -g file:~{five_prime_adapters} \
+            --untrimmed-output=~{output_prefix + "_NO5AD.fastq"} \
+            --too-short-output=~{output_prefix + "_SHORT_FAIL.fastq"} \
+            - > ~{output_prefix + "_trim.fastq"}
     }
 
     output {
@@ -85,7 +85,7 @@ task cutadapt {
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
@@ -103,10 +103,10 @@ task merge_fastqs {
     }
 
     command {
-        cat ${sep=' ' no3ad_untrimmed_fastqs_} > ${output_prefix}_merged_NO3AD.fastq
-        cat ${sep=' ' no5ad_untrimmed_fastqs_} > ${output_prefix}_merged_NO5AD.fastq
-        cat ${sep=' ' too_short_fastqs_} > ${output_prefix}_merged_SHORT_FAIL.fastq
-        cat ${sep=' ' trimmed_fastqs_} > ${output_prefix}_merged_trim.fastq
+        cat ~{sep=' ' no3ad_untrimmed_fastqs_} > ~{output_prefix}_merged_NO3AD.fastq
+        cat ~{sep=' ' no5ad_untrimmed_fastqs_} > ~{output_prefix}_merged_NO5AD.fastq
+        cat ~{sep=' ' too_short_fastqs_} > ~{output_prefix}_merged_SHORT_FAIL.fastq
+        cat ~{sep=' ' trimmed_fastqs_} > ~{output_prefix}_merged_trim.fastq
     }
 
     output {
@@ -118,7 +118,7 @@ task merge_fastqs {
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }

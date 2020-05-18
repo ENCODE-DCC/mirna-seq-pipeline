@@ -41,10 +41,10 @@ task generate_index {
 
     command {
         python3 $(which generate_star_index.py) \
-            --ncpus ${ncpus} \
-            --annotation_file ${annotation_file} \
-            --genome_file ${genome_file} \
-            --output_file ${output_file}
+            --ncpus ~{ncpus} \
+            --annotation_file ~{annotation_file} \
+            --genome_file ~{genome_file} \
+            --output_file ~{output_file}
     }
 
     output {
@@ -54,7 +54,7 @@ task generate_index {
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disks
     }
 }

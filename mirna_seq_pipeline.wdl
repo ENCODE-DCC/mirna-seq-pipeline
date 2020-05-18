@@ -95,13 +95,13 @@ task star {
     }
 
     command {
-        tar -xzvf ${index}
-        gzip -cd ${annotation} > anno.gtf
+        tar -xzvf ~{index}
+        gzip -cd ~{annotation} > anno.gtf
         STAR \
             --genomeDir out \
-            --readFilesIn ${fastq} \
+            --readFilesIn ~{fastq} \
             --sjdbGTFfile anno.gtf \
-            --runThreadN ${ncpus} \
+            --runThreadN ~{ncpus} \
             --alignEndsType EndToEnd \
             --outFilterMismatchNmax 1 \
             --outFilterMultimapScoreRange 0 \
@@ -118,16 +118,16 @@ task star {
             --outWigType wiggle \
             --outWigStrand Stranded \
             --outWigNorm RPM
-        mv Aligned.sortedByCoord.out.bam ${output_prefix}.bam
-        mv ReadsPerGene.out.tab ${output_prefix}.tsv
-        mv Log.final.out ${output_prefix}.Log.final.out
-        python3  $(which make_star_qc.py) --quants ${output_prefix}.tsv \
-                                          --star_log ${output_prefix}.Log.final.out \
-                                          --output_filename ${output_prefix}_star_qc.json
+        mv Aligned.sortedByCoord.out.bam ~{output_prefix}.bam
+        mv ReadsPerGene.out.tab ~{output_prefix}.tsv
+        mv Log.final.out ~{output_prefix}.Log.final.out
+        python3  $(which make_star_qc.py) --quants ~{output_prefix}.tsv \
+                                          --star_log ~{output_prefix}.Log.final.out \
+                                          --output_filename ~{output_prefix}_star_qc.json
     }
 
     output {
-        File bam = glob("${output_prefix}.bam")[0]
+        File bam = glob("~{output_prefix}.bam")[0]
         File tsv = glob("*.tsv")[0]
         File plus_strand_all_wig = glob("Signal.UniqueMultiple.str1.out.wig")[0]
         File minus_strand_all_wig = glob("Signal.UniqueMultiple.str2.out.wig")[0]
@@ -139,7 +139,7 @@ task star {
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
@@ -158,10 +158,10 @@ task wigtobigwig {
     }
 
     command {
-        wigToBigWig ${plus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.plus.bigWig
-        wigToBigWig ${minus_strand_all_wig} ${chrom_sizes} ${output_prefix}.signal.all.minus.bigWig
-        wigToBigWig ${plus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.plus.bigWig
-        wigToBigWig ${minus_strand_unique_wig} ${chrom_sizes} ${output_prefix}.signal.unique.minus.bigWig
+        wigToBigWig ~{plus_strand_all_wig} ~{chrom_sizes} ~{output_prefix}.signal.all.plus.bigWig
+        wigToBigWig ~{minus_strand_all_wig} ~{chrom_sizes} ~{output_prefix}.signal.all.minus.bigWig
+        wigToBigWig ~{plus_strand_unique_wig} ~{chrom_sizes} ~{output_prefix}.signal.unique.plus.bigWig
+        wigToBigWig ~{minus_strand_unique_wig} ~{chrom_sizes} ~{output_prefix}.signal.unique.minus.bigWig
     }
 
     output {
@@ -173,7 +173,7 @@ task wigtobigwig {
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
@@ -185,7 +185,7 @@ task spearman_correlation {
     }
 
     command {
-        python3 $(which calculate_correlation.py) --quants ${sep=' ' quants} --output_filename ${output_filename}
+        python3 $(which calculate_correlation.py) --quants ~{sep=' ' quants} --output_filename ~{output_filename}
     }
 
     output {
@@ -209,16 +209,16 @@ task bamtosam {
     }
 
     command {
-        samtools view ${bamfile} > ${output_sam}
+        samtools view ~{bamfile} > ~{output_sam}
     }
 
     output {
-        File samfile = glob("${output_sam}")[0]
+        File samfile = glob("~{output_sam}")[0]
     }
 
     runtime {
         cpu: ncpus
-        memory: "${ramGB} GB"
+        memory: "~{ramGB} GB"
         disks: disk
     }
 }
