@@ -10,6 +10,11 @@ version 1.0
 import "cutadapt_subworkflow.wdl" as cutadapt_sub
 
 workflow mirna_seq_pipeline {
+    meta {
+        author: "Otto Jolanki"
+        version: "dev_1.2"
+    }
+
     input {
         #Array containing the input fastq files
         Array[Array[File]] fastqs
