@@ -28,7 +28,7 @@ make_tag: &make_tag
 get_star_index: &get_star_index
   name: get star index for test
   command: |
-    curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+    curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 
 # Jobs
 orbs:
