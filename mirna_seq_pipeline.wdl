@@ -3,16 +3,15 @@ version 1.0
 # ENCODE micro rna seq pipeline: main pipeline
 # Maintainer: Otto Jolanki
 
-#CAPER docker quay.io/encode-dcc/mirna-seq-pipeline:v1.1
-#CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.1
-#CROO out_def https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json
-
 import "cutadapt_subworkflow.wdl" as cutadapt_sub
 
 workflow mirna_seq_pipeline {
     meta {
         author: "Otto Jolanki"
         version: "dev_1.2"
+        caper_docker: "encodedcc/mirna-seq-pipeline:v1.1"
+        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:v1.1"
+        croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json"
     }
 
     input {

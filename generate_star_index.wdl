@@ -2,13 +2,12 @@ version 1.0
 
 # ENCODE micro rna seq pipeline: generate star index
 
-#CAPER docker quay.io/encode-dcc/mirna-seq-pipeline:v1.1
-#CAPER singularity docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.1
-
 workflow generate_STAR_index {
     meta {
         author: "Otto Jolanki"
         version: "dev_1.2"
+        caper_docker: "encodedcc/mirna-seq-pipeline:v1.1"
+        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:v1.1"
     }
 
     input {
