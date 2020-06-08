@@ -126,7 +126,7 @@ When running workflows on SLURM (or other) HPC clusters, use [Caper](https://git
 
 ```bash
   sdev
-  mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.0.simg -F docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
+  mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.1.simg -F docker://encodedcc/mirna-seq-pipeline:v1.1
   exit #this takes you back to the login node
 ```
 
@@ -134,7 +134,7 @@ Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/d
 ```
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/mirna-seq-pipeline-v1.0.simg",
+        "singularity_container" : "~/.singularity/mirna-seq-pipeline-v1.1.simg",
         "singularity_bindpath" : "~/, /in/some/data/directory1/, /in/some/data/directory2/"
     }
 }
