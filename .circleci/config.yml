@@ -7,7 +7,7 @@
 version: 2.1
 defaults: &defaults
   docker:
-    - image: circleci/buildpack-deps:xenial-scm
+    - image: cimg/base@sha256:d75b94c6eae6e660b6db36761709626b93cabe8c8da5b955bfbf7832257e4201
   working_directory: ~/mirna-seq-pipeline
 
 python_defaults: &python_defaults
@@ -17,7 +17,7 @@ python_defaults: &python_defaults
 
 machine_defaults: &machine_defaults
   machine:
-    image: circleci/classic:latest
+    image: ubuntu-1604:202007-01
   working_directory: ~/mirna-seq-pipeline
 
 make_tag: &make_tag
@@ -73,7 +73,6 @@ jobs:
       - run: *make_tag
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
@@ -91,7 +90,6 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
@@ -109,7 +107,6 @@ jobs:
       - run: *make_tag
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
@@ -129,7 +126,6 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
@@ -152,7 +148,6 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
@@ -175,7 +170,6 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
