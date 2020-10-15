@@ -83,6 +83,12 @@ workflow mirna_seq_pipeline {
             output_filename=experiment_prefix+"_spearman.json",
             }
     }
+
+    output {
+        Array[File] no3ad_untrimmed_fastq = cutadapt.no3ad_untrimmed_fastq
+        Array[File] no5ad_untrimmed_fastq = cutadapt.no5ad_untrimmed_fastq
+        Array[File] too_short_fastq = cutadapt.too_short_fastq
+    }
 }
 
 #Task definitions
