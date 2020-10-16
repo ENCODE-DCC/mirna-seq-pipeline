@@ -31,7 +31,7 @@ The goal is to run the pipeline with test data using Google Cloud Platform.
 3. Get the STAR index:
 
 ```bash
-  curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+  curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 ```
 
 4. Move the reference files and required adapters into your Google Cloud bucket (we will assume you have created the directories on your Google Cloud bucket):
@@ -96,7 +96,7 @@ Make sure you have completed the installation of docker, Java and Cromwell as de
 2. Get the STAR index:
 
 ```bash
-  curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+  curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 ```
 
 3. Run the pipeline:
@@ -119,14 +119,14 @@ When running workflows on SLURM (or other) HPC clusters, use [Caper](https://git
 2. Get the STAR index:
 
 ```bash
-  curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+  curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 ```
 
 3. Build the singularity image for the pipeline. The following pulls the pipeline docker image, and uses that to construct the singularity image. The image will be stored in `~/.singularity`. It is bad practice to build images (or do any other intensive work) on login nodes. For this reason we will first invoke an interactive session on a different node by running `sdev` command, and building there (It will take few seconds to get back into the shell after running `sdev`).
 
 ```bash
   sdev
-  mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.0.simg -F docker://quay.io/encode-dcc/mirna-seq-pipeline:v1.0
+  mkdir -p ~/.singularity && cd ~/.singularity && SINGULARITY_CACHEDIR=~/.singularity SINGULARITY_PULLFOLDER=~/.singularity singularity pull --name mirna-seq-pipeline-v1.1.simg -F docker://encodedcc/mirna-seq-pipeline:v1.1
   exit #this takes you back to the login node
 ```
 
@@ -134,7 +134,7 @@ Note: If you want to store your inputs `/in/some/data/directory1`and `/in/some/d
 ```
 {
     "default_runtime_attributes" : {
-        "singularity_container" : "~/.singularity/mirna-seq-pipeline-v1.0.simg",
+        "singularity_container" : "~/.singularity/mirna-seq-pipeline-v1.1.simg",
         "singularity_bindpath" : "~/, /in/some/data/directory1/, /in/some/data/directory2/"
     }
 }

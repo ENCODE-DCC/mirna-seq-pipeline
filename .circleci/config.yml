@@ -7,32 +7,30 @@
 version: 2.1
 defaults: &defaults
   docker:
-    - image: circleci/buildpack-deps:xenial-scm
+    - image: cimg/base@sha256:d75b94c6eae6e660b6db36761709626b93cabe8c8da5b955bfbf7832257e4201
   working_directory: ~/mirna-seq-pipeline
 
 python_defaults: &python_defaults
   docker:
-    - image: quay.io/encode-dcc/mirna-seq-pipeline:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
+    - image: encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}
   working_directory: ~/mirna-seq-pipeline
 
 machine_defaults: &machine_defaults
   machine:
-    image: circleci/classic:latest
+    image: ubuntu-1604:202007-01
   working_directory: ~/mirna-seq-pipeline
 
 make_tag: &make_tag
   name: make docker image tag
   command: |
-    echo "export TAG=quay.io/encode-dcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
+    echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
 get_star_index: &get_star_index
   name: get star index for test
   command: |
-    curl https://storage.googleapis.com/mirna-seq-pipeline/circleCI_reference/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+    curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 
 # Jobs
-orbs:
-  singularity: singularity/singularity@1.0.3
 jobs:
   build:
     <<: *defaults
@@ -45,9 +43,9 @@ jobs:
           command: |
             source ${BASH_ENV}
             echo "pulling template!"
-            docker pull quay.io/encode-dcc/mirna-seq-pipeline:template
-            docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-            docker build --cache-from quay.io/encode-dcc/mirna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
+            docker pull encodedcc/mirna-seq-pipeline:template
+            docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
+            docker build --cache-from encodedcc/mirna-seq-pipeline:template --build-arg GIT_COMMIT_HASH=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH} --build-arg BUILD_TAG=${TAG} -t $TAG .
             docker push $TAG
             docker logout
           no_output_timeout: 30m
@@ -62,9 +60,9 @@ jobs:
             command: |
               source ${BASH_ENV}
               docker pull $TAG
-              docker login -u=${QUAY_ROBOT_USER} -p=${QUAY_ROBOT_USER_TOKEN} quay.io
-              docker tag $TAG quay.io/encode-dcc/mirna-seq-pipeline:template
-              docker push quay.io/encode-dcc/mirna-seq-pipeline:template
+              docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
+              docker tag $TAG encodedcc/mirna-seq-pipeline:template
+              docker push encodedcc/mirna-seq-pipeline:template
               docker logout
             no_output_timeout: 30m
 
@@ -75,29 +73,8 @@ jobs:
       - run: *make_tag
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
-            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
-            --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
-            cat test_cutadapt_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
-          no_output_timeout: 30m
-
-  test_cutadapt_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
             test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
             --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
@@ -113,31 +90,8 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
-            test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
-            --metadata_json test_star_input.metadata.json --reference_json test/test_task/test_star_reference_md5.json \
-            --outfile test_star_input.result.json
-            cat test_star_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_star_input.result.json
-          no_output_timeout: 30m
-
-  test_star_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
             test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
             --metadata_json test_star_input.metadata.json --reference_json test/test_task/test_star_reference_md5.json \
@@ -153,31 +107,8 @@ jobs:
       - run: *make_tag
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
-            test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
-            test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
-            --metadata_json test_wigtobigwig_input.metadata.json \
-            --reference_json test/test_task/test_wigtobigwig_reference_md5.json --outfile test_wigtobigwig_input.result.json
-            cat test_wigtobigwig_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
-          no_output_timeout: 30m
-
-  test_wigtobigwig_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
             test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
             test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
@@ -195,35 +126,8 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
-            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
-            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
-            mirna_seq_pipeline.star.minus_strand_all_wig mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
-            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq mirna_seq_pipeline.star.plus_strand_all_wig \
-            --metadata_json test_workflow_input.metadata.json \
-            --reference_json test/test_workflow/test_workflow_reference_md5.json \
-            --outfile test_workflow_input.result.json
-            cat test_workflow_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_input.result.json
-          no_output_timeout: 30m
-
-  test_workflow_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
@@ -244,35 +148,8 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
-            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
-            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
-            mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
-            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_2reps_input.metadata.json \
-            --reference_json test/test_workflow/test_workflow_2reps_reference_md5.json \
-            --outfile test_workflow_2reps_input.result.json
-            cat test_workflow_2reps_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_2reps_input.result.json
-          no_output_timeout: 30m
-
-  test_workflow_2reps_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
@@ -293,35 +170,8 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            pyenv global 3.5.2
             source ${BASH_ENV}
             test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
-            python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
-            mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
-            mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
-            mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
-            mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_techreps_input.metadata.json \
-            --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
-            --outfile test_workflow_techreps_input.result.json
-            cat test_workflow_techreps_input.result.json
-            python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_workflow_techreps_input.result.json
-          no_output_timeout: 30m
-
-  test_workflow_techreps_singularity:
-    <<: *machine_defaults
-    steps:
-      - checkout
-      - run: sudo apt-get update
-      - singularity/install-go
-      - singularity/debian-install-3
-      - run: *make_tag
-      - run: *get_star_index
-      - run:
-          command: |
-            pyenv global 3.5.2
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG singularity
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
@@ -342,50 +192,26 @@ workflows:
       - test_cutadapt_docker:
           requires:
             - build
-      - test_cutadapt_singularity:
-          requires:
-            - build
       - test_star_docker:
-          requires:
-            - build
-      - test_star_singularity:
           requires:
             - build
       - test_wigtobigwig_docker:
           requires:
             - build
-      - test_wigtobigwig_singularity:
-          requires:
-            - build
       - test_workflow_docker:
-          requires:
-            - build
-      - test_workflow_singularity:
           requires:
             - build
       - test_workflow_2reps_docker:
           requires:
             - build
-      - test_workflow_2reps_singularity:
-          requires:
-            - build
       - test_workflow_techreps_docker:
-          requires:
-            - build
-      - test_workflow_techreps_singularity:
           requires:
             - build
       - push_template:
           requires:
             - test_cutadapt_docker
-            - test_cutadapt_singularity
             - test_star_docker
-            - test_star_singularity
             - test_wigtobigwig_docker
-            - test_wigtobigwig_singularity
             - test_workflow_docker
-            - test_workflow_singularity
             - test_workflow_2reps_docker
-            - test_workflow_2reps_singularity
             - test_workflow_techreps_docker
-            - test_workflow_techreps_singularity
