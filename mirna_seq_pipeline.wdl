@@ -8,9 +8,9 @@ import "cutadapt_subworkflow.wdl" as cutadapt_sub
 workflow mirna_seq_pipeline {
     meta {
         author: "Otto Jolanki"
-        version: "dev_1.2"
-        caper_docker: "encodedcc/mirna-seq-pipeline:v1.1"
-        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:v1.1"
+        version: "1.2.0"
+        caper_docker: "encodedcc/mirna-seq-pipeline:1.2.0"
+        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:1.2.0"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json"
     }
 
