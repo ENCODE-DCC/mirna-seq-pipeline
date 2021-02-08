@@ -47,6 +47,10 @@ RUN pip3 install qc-utils==0.1.1
 
 RUN pip3 install pandas==0.24.2 scipy
 
+# Install ptools_bin
+
+RUN pip3 install ptools-bin==0.0.4
+
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
 ENV PATH="/software/mirna-seq-pipeline/src:${PATH}"
