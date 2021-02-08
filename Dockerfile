@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     #samtools dependencies
     libbz2-dev \
     libncurses5-dev
+    # wigtobigwig
+    libcurl3
+
 RUN mkdir /software
 WORKDIR /software
 ENV PATH="/software:${PATH}"
