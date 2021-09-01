@@ -1,6 +1,6 @@
 # Dockerfile for ENCODE-DCC mirna-seq-pipeline
 # base on ubuntu 16.04
-FROM ubuntu@sha256:e10375c69cf9e22989c82b0a87c932a21e33619ee322d6c7ce6a61456f54c30c
+FROM ubuntu@sha256:10cbddb6cf8568f56584ccb6c866203e68ab8e621bb87038e254f6f27f955bbe
 MAINTAINER Otto Jolanki
 
 RUN apt-get update && apt-get install -y \
@@ -32,7 +32,7 @@ ENV PATH="/software/STAR-2.5.1b/bin/Linux_x86_64:${PATH}"
 RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/wigToBigWig && chmod +x wigToBigWig
 
 # Install cutadapt 1.7.1
-RUN pip3 install cutadapt==1.7.1
+RUN pip3 install cutadapt==3.4
 
 # Install Samtools 1.9
 RUN git clone --branch 1.9 --single-branch https://github.com/samtools/samtools.git && \
@@ -45,7 +45,7 @@ RUN pip3 install qc-utils==0.1.1
 
 # Install pandas==0.24.2 and scipy
 
-RUN pip3 install pandas==0.24.2 scipy
+RUN pip3 install pandas==1.3.2 scipy==1.7.1
 
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
