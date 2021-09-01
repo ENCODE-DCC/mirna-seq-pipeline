@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     #samtools dependencies
     libbz2-dev \
     libncurses5-dev \
-    libcurl3
+    libcurl4
 
 RUN mkdir /software
 WORKDIR /software
