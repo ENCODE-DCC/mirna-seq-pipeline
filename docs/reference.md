@@ -13,17 +13,17 @@ This document contains more detailed information on the inputs, outputs and the 
 
 ## Software
 
-### Ubuntu 16.04
+### Ubuntu 20.04
 
-The pipeline docker image is based on [Ubuntu base image](https://hub.docker.com/_/ubuntu/) version `16.04`.
+The pipeline docker image is based on [Ubuntu base image](https://hub.docker.com/_/ubuntu/) version `20.04`.
 
-### Python 3.5.2
+### Python 3.8.10
 
-Python parts of the pipeline are run using [Python 3.5.2](https://www.python.org/download/releases/3.5.2/) that ships with Ubuntu 16.04.
+Python parts of the pipeline are run using [Python 3.8.10](https://www.python.org/download/releases/3.8.10/) that ships with Ubuntu 20.04.
 
-### Cutadapt 1.7.1
+### Cutadapt 3.4
 
-For trimming the adapters we use [cutadapt version 1.7.1](https://cutadapt.readthedocs.io/en/stable/). For publication detailing the software, see [Article by Marcel Martin](http://journal.embnet.org/index.php/embnetjournal/article/view/200).
+For trimming the adapters we use [cutadapt version 3.4](https://cutadapt.readthedocs.io/en/stable/). For publication detailing the software, see [Article by Marcel Martin](http://journal.embnet.org/index.php/embnetjournal/article/view/200).
 
 ### WigtoBigWig
 
