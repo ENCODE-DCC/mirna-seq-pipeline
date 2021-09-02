@@ -5,9 +5,9 @@ version 1.0
 workflow generate_STAR_index {
     meta {
         author: "Otto Jolanki"
-        version: "1.2.0"
-        caper_docker: "encodedcc/mirna-seq-pipeline:1.2.0"
-        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:1.2.0"
+        version: "1.2.2"
+        caper_docker: "encodedcc/mirna-seq-pipeline:1.2.2"
+        caper_singularity: "docker://encodedcc/mirna-seq-pipeline:1.2.2"
     }
 
     input {
