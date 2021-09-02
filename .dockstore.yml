@@ -4,7 +4,7 @@ workflows:
    - name: mirna-seq-pipeline 
      publish: True
      subclass: WDL
-     primaryDescriptorPath: mirna-seq-pipeline.wdl
+     primaryDescriptorPath: /mirna_seq_pipeline.wdl
      authors:
        - name: Otto Jolanki
          orcid: https://orcid.org/0000-0001-8601-4849
