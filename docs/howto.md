@@ -7,9 +7,10 @@ Before following these instructions, make sure you have completed installation a
 
 ## Running Analyses
 
-[Google Cloud](howto.md#google-cloud)
-[Local with Docker](howto.md#local-with-docker)
-[SLURM](howto.md#slurm-singularity)
+[Google Cloud](howto.md#google-cloud)  
+[Truwl](howto.md#truwl)     
+[Local with Docker](howto.md#local-with-docker)     
+[SLURM](howto.md#slurm-singularity)     
 [Building STAR index](howto.md#building-star-index)
 
 # RUNNING THE PIPELINE
@@ -81,6 +82,13 @@ Replace `[YOUR_BUCKET_NAME]` with the actual name of your Google Cloud bucket an
 ```
 
 8. You can observe the virtual machines spinning up on your Google Cloud Compute Engine dashboard, and after the pipeline finishes in few minutes you can the output in `gs://[YOUR_BUCKET_NAME]/output`.
+
+## Truwl
+
+You can run this pipeline on [truwl.com](https://truwl.com/workflows/library/ENCODE%20Micro%20RNA-seq%20pipeline/v1.2.0). This provides a web interface that allows you to define inputs and parameters, run the job on GCP, and monitor progress in a ready-to-go environment. To run it you will need to create an account on the platform then request early access by emailing [info@truwl.com](mailto:info@truwl.com) to get the right permissions. You can see an example case [here](https://truwl.com/workflows/library/ENCODE%20Micro%20RNA-seq%20pipeline/v1.2.0/instances/WF_844a7e.de.5f29). The example job (or other jobs) can be forked to pre-populate the inputs for your own job.
+
+If you do not run the pipeline on Truwl, you can still share your use-case/job on the platform by getting in touch at [info@truwl.com](mailto:info@truwl.com) and providing your inputs.json file.
+
 
 ## Local with Docker
 
