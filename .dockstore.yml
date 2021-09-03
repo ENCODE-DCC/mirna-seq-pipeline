@@ -5,7 +5,8 @@ workflows:
      publish: True
      subclass: WDL
      primaryDescriptorPath: /mirna_seq_pipeline.wdl
+     testParameterFiles:
+         - /test/test_dockstore/dockstore_test_input.json
      authors:
        - name: Otto Jolanki
          orcid: https://orcid.org/0000-0001-8601-4849
-         email: ojolanki at stanford dot edu
