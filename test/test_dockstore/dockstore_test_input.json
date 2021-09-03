@@ -1,21 +1,21 @@
 {
-  "mirna_seq_pipeline.chrom_sizes": "https://github.com/ENCODE-DCC/mirna-seq-pipeline/raw/dev/test_data/refs/test.chrom.sizes.tsv",
+  "mirna_seq_pipeline.chrom_sizes": "https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/test.chrom.sizes.tsv",
   "mirna_seq_pipeline.cutadapt_disk": "local-disk 20 HDD",
   "mirna_seq_pipeline.cutadapt_ncpus": 1,
   "mirna_seq_pipeline.cutadapt_ramGB": 2,
   "mirna_seq_pipeline.experiment_prefix": "TEST_WORKFLOW",
   "mirna_seq_pipeline.fastqs": [
-    ["https://github.com/ENCODE-DCC/mirna-seq-pipeline/raw/dev/test_data/data/HepG2.1.test.fastq"]
+    ["https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/HepG2.1.test.fastq"]
   ],
   "mirna_seq_pipeline.five_prime_adapters": [
-    ["https://github.com/ENCODE-DCC/mirna-seq-pipeline/raw/dev/adapters/five_prime_adapter_set1.fasta"]
+    ["https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/five_prime_adapter_set1.fasta"]
   ],
-  "mirna_seq_pipeline.mirna_annotation": "https://github.com/ENCODE-DCC/mirna-seq-pipeline/raw/dev/test_data/refs/test.chr19.miRNA.gtf.gz",
+  "mirna_seq_pipeline.mirna_annotation": "https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/test.chr19.miRNA.gtf.gz",
   "mirna_seq_pipeline.star_disk": "local-disk 20 HDD",
-  "mirna_seq_pipeline.star_index": "https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz",
+  "mirna_seq_pipeline.star_index": "https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz",
   "mirna_seq_pipeline.star_ncpus": 2,
   "mirna_seq_pipeline.star_ramGB": 4,
-  "mirna_seq_pipeline.three_prime_adapters": "https://github.com/ENCODE-DCC/mirna-seq-pipeline/raw/dev/adapters/three_prime_adapter.fasta",
+  "mirna_seq_pipeline.three_prime_adapters": "https://storage.googleapis.com/dockstore_test_input/mirna-seq-pipeline/three_prime_adapter.fasta",
   "mirna_seq_pipeline.wigtobigwig_disk": "local-disk 20 HDD",
   "mirna_seq_pipeline.wigtobigwig_ncpus": 1,
   "mirna_seq_pipeline.wigtobigwig_ramGB": 2
