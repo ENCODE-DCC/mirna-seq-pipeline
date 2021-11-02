@@ -30,6 +30,53 @@ get_star_index: &get_star_index
   command: |
     curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
 
+commands:
+  set_env_variables:
+    description: "Set environment ready for docker running and pushing"
+    steps:
+      - run:
+          command: |
+            echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
+            echo "export CROMWELL=./cromwell-56.jar" >> ${BASH_ENV}
+            echo "export WOMTOOL=./womtool-56.jar" >> ${BASH_ENV}
+
+  install_python_requirements:
+    description: "Install pytest workflow requirements"
+    steps:
+      - run: pyenv global 3.7.8
+      - run: pip install --upgrade pip
+      - run: pip install -r test_env_requirements.txt
+
+  download_file:
+    description: "Download a file using wget"
+    parameters:
+      file_url:
+        type: string
+    steps:
+      - run: wget <<parameters.file_url>>
+
+  prepare_pytest_environment:
+    description: "Get machine ready to run caper and pytest-workflow"
+    steps:
+      - set_env_variables
+      - install_python_requirements
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/cromwell-56.jar"
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/womtool-56.jar"
+
+  run_test_tag:
+    description: "Run tagged test"
+    parameters:
+      tag:
+        type: string
+      wt:
+        type: string
+    steps:
+      - run:
+          command: pytest -v --tag <<parameters.tag>> --wt <<parameters.wt>> --symlink --kwd
+          no_output_timeout: 60m
+
 # Jobs
 jobs:
   build:
