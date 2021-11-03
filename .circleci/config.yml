@@ -40,8 +40,8 @@ commands:
     steps:
       - run: pyenv install 3.7.8
       - run: pyenv global 3.7.8
-      - run: pip install --upgrade pip
-      - run: pip install -r test_env_requirements.txt
+      - run: pip install --upgrade pip==21.3.1
+      - run: pip install -r requirements-dev.txt
 
   download_file:
     description: "Download a file using wget"
@@ -71,7 +71,7 @@ commands:
     steps:
       - run:
           command: pytest -v --tag <<parameters.tag>> --wt <<parameters.wt>> --symlink --kwd
-          no_output_timeout: 60m
+          no_output_timeout: 15m
 
 # Jobs
 jobs:
