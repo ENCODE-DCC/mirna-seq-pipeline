@@ -83,7 +83,6 @@ jobs:
       - run:
           name: build image
           command: |
-            source ${BASH_ENV}
             echo "pulling template!"
             docker pull encodedcc/mirna-seq-pipeline:template
             docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
@@ -114,7 +113,7 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
             test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
             --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
@@ -130,7 +129,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
             test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
             --metadata_json test_star_input.metadata.json --reference_json test/test_task/test_star_reference_md5.json \
@@ -146,7 +145,7 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
             test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
             test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
@@ -164,7 +163,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
@@ -185,7 +184,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
@@ -206,7 +205,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
