@@ -113,9 +113,9 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/caper_run.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
-            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
+            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json metadata.json \
             --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
             cat test_cutadapt_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
@@ -129,10 +129,10 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/caper_run.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_star.wdl test/test_task/test_star_input.json
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
             test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
-            --metadata_json test_star_input.metadata.json --reference_json test/test_task/test_star_reference_md5.json \
+            --metadata_json metadata.json --reference_json test/test_task/test_star_reference_md5.json \
             --outfile test_star_input.result.json
             cat test_star_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_star_input.result.json
@@ -145,11 +145,11 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/caper_run.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
             test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
             test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
-            --metadata_json test_wigtobigwig_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_task/test_wigtobigwig_reference_md5.json --outfile test_wigtobigwig_input.result.json
             cat test_wigtobigwig_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
@@ -163,13 +163,13 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.star.minus_strand_all_wig mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq mirna_seq_pipeline.star.plus_strand_all_wig \
-            --metadata_json test_workflow_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_reference_md5.json \
             --outfile test_workflow_input.result.json
             cat test_workflow_input.result.json
@@ -184,13 +184,13 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_2reps_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_2reps_reference_md5.json \
             --outfile test_workflow_2reps_input.result.json
             cat test_workflow_2reps_input.result.json
@@ -205,13 +205,13 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_techreps_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
             --outfile test_workflow_techreps_input.result.json
             cat test_workflow_techreps_input.result.json
