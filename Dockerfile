@@ -44,3 +44,4 @@ RUN pip3 install pandas==1.3.2 scipy==1.7.1
 RUN mkdir -p mirna-seq-pipeline/src
 COPY /src mirna-seq-pipeline/src
 ENV PATH="/software/mirna-seq-pipeline/src:${PATH}"
+RUN echo "make sure it is this image"
