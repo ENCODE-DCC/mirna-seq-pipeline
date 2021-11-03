@@ -17,18 +17,61 @@ python_defaults: &python_defaults
 
 machine_defaults: &machine_defaults
   machine:
-    image: ubuntu-1604:202007-01
+    image: ubuntu-2004:202107-02
   working_directory: ~/mirna-seq-pipeline
-
-make_tag: &make_tag
-  name: make docker image tag
-  command: |
-    echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" > ${BASH_ENV}
 
 get_star_index: &get_star_index
   name: get star index for test
   command: |
     curl https://storage.googleapis.com/circle_ci_test_data/mirna-seq-pipeline/star_index_mirna_chr19.tar.gz -o test_data/refs/star_index_mirna_chr19.tar.gz
+
+commands:
+  set_env_variables:
+    description: "Set environment ready for docker running and pushing"
+    steps:
+      - run:
+          command: |
+            echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
+            echo "export CROMWELL=./cromwell-70.jar" >> ${BASH_ENV}
+            echo "export WOMTOOL=./womtool-70.jar" >> ${BASH_ENV}
+
+  install_python_requirements:
+    description: "Install pytest workflow requirements"
+    steps:
+      - run: pyenv install 3.7.8
+      - run: pyenv global 3.7.8
+      - run: pip install --upgrade pip==21.3.1
+      - run: pip install -r requirements-dev.txt
+
+  download_file:
+    description: "Download a file using wget"
+    parameters:
+      file_url:
+        type: string
+    steps:
+      - run: wget <<parameters.file_url>>
+
+  prepare_pytest_environment:
+    description: "Get machine ready to run caper and pytest-workflow"
+    steps:
+      - set_env_variables
+      - install_python_requirements
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/70/cromwell-70.jar"
+      - download_file:
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/70/womtool-70.jar"
+
+  run_test_tag:
+    description: "Run tagged test"
+    parameters:
+      tag:
+        type: string
+      wt:
+        type: string
+    steps:
+      - run:
+          command: pytest -v --tag <<parameters.tag>> --wt <<parameters.wt>> --symlink --kwd
+          no_output_timeout: 15m
 
 # Jobs
 jobs:
@@ -37,11 +80,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: *make_tag
+      - set_env_variables
       - run:
           name: build image
           command: |
-            source ${BASH_ENV}
             echo "pulling template!"
             docker pull encodedcc/mirna-seq-pipeline:template
             docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
@@ -55,10 +97,9 @@ jobs:
       steps:
         - checkout
         - setup_remote_docker
-        - run: *make_tag
+        - set_env_variables
         - run:
             command: |
-              source ${BASH_ENV}
               docker pull $TAG
               docker login -u=${DOCKERHUB_USER} -p=${DOCKERHUB_PASS}
               docker tag $TAG encodedcc/mirna-seq-pipeline:template
@@ -70,13 +111,12 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
-            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json test_cutadapt_input.metadata.json \
+            test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json metadata.json \
             --reference_json test/test_task/test_cutadapt_reference_md5.json --outfile test_cutadapt_input.result.json
             cat test_cutadapt_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_cutadapt_input.result.json
@@ -86,15 +126,14 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_star.wdl test/test_task/test_star_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_star.wdl test/test_task/test_star_input.json
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
             test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
-            --metadata_json test_star_input.metadata.json --reference_json test/test_task/test_star_reference_md5.json \
+            --metadata_json metadata.json --reference_json test/test_task/test_star_reference_md5.json \
             --outfile test_star_input.result.json
             cat test_star_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_star_input.result.json
@@ -104,15 +143,14 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json $TAG docker
+            test/caper_run.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
             test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
             test_wigtobigwig.wigtobigwig.plus_strand_unique_bigwig \
-            --metadata_json test_wigtobigwig_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_task/test_wigtobigwig_reference_md5.json --outfile test_wigtobigwig_input.result.json
             cat test_wigtobigwig_input.result.json
             python3 -c "import sys; import json; data=json.loads(sys.stdin.read()); sys.exit(int(not data['match_overall']))" < test_wigtobigwig_input.result.json
@@ -122,18 +160,17 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.star.minus_strand_all_wig mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq mirna_seq_pipeline.star.plus_strand_all_wig \
-            --metadata_json test_workflow_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_reference_md5.json \
             --outfile test_workflow_input.result.json
             cat test_workflow_input.result.json
@@ -144,18 +181,17 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment 
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_2reps_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_2reps_reference_md5.json \
             --outfile test_workflow_2reps_input.result.json
             cat test_workflow_2reps_input.result.json
@@ -166,18 +202,17 @@ jobs:
     <<: *machine_defaults
     steps:
       - checkout
-      - run: *make_tag
+      - prepare_pytest_environment 
       - run: *get_star_index
       - run:
           command: |
-            source ${BASH_ENV}
-            test/test.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json $TAG docker
+            test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
             mirna_seq_pipeline.cutadapt.no5ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.plus_strand_unique_bigwig \
             mirna_seq_pipeline.cutadapt.no3ad_untrimmed_fastq mirna_seq_pipeline.wigtobigwig.minus_strand_unique_bigwig \
             mirna_seq_pipeline.wigtobigwig.plus_strand_all_bigwig mirna_seq_pipeline.cutadapt.too_short_fastq \
-            --metadata_json test_workflow_techreps_input.metadata.json \
+            --metadata_json metadata.json \
             --reference_json test/test_workflow/test_workflow_techreps_reference_md5.json \
             --outfile test_workflow_techreps_input.result.json
             cat test_workflow_techreps_input.result.json
