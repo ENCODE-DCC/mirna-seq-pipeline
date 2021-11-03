@@ -38,6 +38,14 @@ workflow mirna_seq_pipeline {
         Int wigtobigwig_ncpus
         Int wigtobigwig_ramGB
         String wigtobigwig_disk
+
+        String docker = "encodedcc/mirna-seq-pipeline:1.2.2"
+        String singularity = "docker://encodedcc/mirna-seq-pipeline:1.2.2"
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": singularity
     }
 
     scatter (i in range(length(fastqs))) {
@@ -49,6 +57,7 @@ workflow mirna_seq_pipeline {
             ncpus=cutadapt_ncpus,
             ramGB=cutadapt_ramGB,
             disk=cutadapt_disk,
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -61,6 +70,7 @@ workflow mirna_seq_pipeline {
             ncpus=star_ncpus,
             ramGB=star_ramGB,
             disk=star_disk,
+            runtime_environment=runtime_environment,
         }
 
         call wigtobigwig { input:
@@ -73,6 +83,7 @@ workflow mirna_seq_pipeline {
             ncpus=wigtobigwig_ncpus,
             ramGB=wigtobigwig_ramGB,
             disk=wigtobigwig_disk,
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -81,6 +92,7 @@ workflow mirna_seq_pipeline {
         call spearman_correlation { input:
             quants=star.tsv,
             output_filename=experiment_prefix+"_spearman.json",
+            runtime_environment=runtime_environment,
             }
     }
 }
@@ -96,6 +108,7 @@ task star {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -145,6 +158,8 @@ task star {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disk
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -159,6 +174,7 @@ task wigtobigwig {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -179,6 +195,8 @@ task wigtobigwig {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disk
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -186,6 +204,7 @@ task spearman_correlation {
     input {
         Array[File] quants
         String output_filename
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -200,6 +219,8 @@ task spearman_correlation {
         cpu: 1
         memory: "2 GB"
         disks: "local-disk 20 SSD"
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -210,6 +231,7 @@ task bamtosam {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -224,5 +246,7 @@ task bamtosam {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disk
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
