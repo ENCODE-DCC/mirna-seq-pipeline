@@ -32,8 +32,8 @@ commands:
       - run:
           command: |
             echo "export TAG=encodedcc/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_BRANCH}_${CIRCLE_WORKFLOW_ID}" >> ${BASH_ENV}
-            echo "export CROMWELL=./cromwell-56.jar" >> ${BASH_ENV}
-            echo "export WOMTOOL=./womtool-56.jar" >> ${BASH_ENV}
+            echo "export CROMWELL=./cromwell-70.jar" >> ${BASH_ENV}
+            echo "export WOMTOOL=./womtool-70.jar" >> ${BASH_ENV}
 
   install_python_requirements:
     description: "Install pytest workflow requirements"
@@ -56,9 +56,9 @@ commands:
       - set_env_variables
       - install_python_requirements
       - download_file:
-          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/cromwell-56.jar"
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/70/cromwell-70.jar"
       - download_file:
-          file_url: "https://github.com/broadinstitute/cromwell/releases/download/56/womtool-56.jar"
+          file_url: "https://github.com/broadinstitute/cromwell/releases/download/70/womtool-70.jar"
 
   run_test_tag:
     description: "Run tagged test"
