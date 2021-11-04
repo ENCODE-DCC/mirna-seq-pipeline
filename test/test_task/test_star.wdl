@@ -18,6 +18,7 @@ workflow test_star {
 
     RuntimeEnvironment runtime_environment = {
       "docker": docker
+      "singularity": ""
     }
 
     call mirna.star { input:

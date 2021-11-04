@@ -20,6 +20,7 @@ workflow test_wigtobigwig {
 
     RuntimeEnvironment runtime_environment = {
       "docker": docker
+      "singularity": ""
     }
 
     call mirna.wigtobigwig { input:

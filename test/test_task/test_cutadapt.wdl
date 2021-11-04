@@ -18,6 +18,7 @@ workflow test_cutadapt {
 
     RuntimeEnvironment runtime_environment = {
       "docker": docker
+      "singularity": ""
     }
 
     call cutadapt.cutadapt { input:
