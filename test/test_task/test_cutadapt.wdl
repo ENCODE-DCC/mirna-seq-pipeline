@@ -13,6 +13,11 @@ workflow test_cutadapt {
         Int ncpus
         Int ramGB
         String disk
+        String docker
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker
     }
 
     call cutadapt.cutadapt { input:
@@ -23,5 +28,6 @@ workflow test_cutadapt {
         ncpus=ncpus,
         ramGB=ramGB,
         disk=disk,
+        runtime_environment=runtime_environment,
     }
 }
