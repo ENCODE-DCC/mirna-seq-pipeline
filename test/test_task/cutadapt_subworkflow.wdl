@@ -1,1 +1,0 @@
-../../cutadapt_subworkflow.wdl
