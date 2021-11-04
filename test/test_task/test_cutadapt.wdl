@@ -2,7 +2,7 @@ version 1.0
 
 # Test workflow for cutadapt task in ENCODE micro rna seq pipeline
 
-import "cutadapt_subworkflow.wdl" as cutadapt
+import "../../cutadapt_subworkflow.wdl" as cutadapt
 
 workflow test_cutadapt {
     input {
