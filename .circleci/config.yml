@@ -114,7 +114,7 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_task/test_cutadapt_input.json test_cutadapt
+            test/add_docker_image_tag_to_input.sh test/test_task/test_cutadapt_input.json test_cutadapt
             test/caper_run.sh test/test_task/test_cutadapt.wdl test/test_task/test_cutadapt_input.json
             python3 src/compare_md5.py --keys_to_inspect test_cutadapt.cutadapt.no5ad_untrimmed_fastq test_cutadapt.cutadapt.no3ad_untrimmed_fastq \
             test_cutadapt.cutadapt.too_short_fastq test_cutadapt.cutadapt.trimmed_fastq --metadata_json metadata.json \
@@ -131,7 +131,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_task/test_star_input.json test_star
+            test/add_docker_image_tag_to_input.sh test/test_task/test_star_input.json test_star
             test/caper_run.sh test/test_task/test_star.wdl test/test_task/test_star_input.json
             python3 src/compare_md5.py --keys_to_inspect test_star.star.minus_strand_all_wig test_star.star.minus_strand_unique_wig \
             test_star.star.plus_strand_all_wig test_star.star.plus_strand_unique_wig test_star.star.tsv test_star.bamtosam.samfile \
@@ -148,7 +148,7 @@ jobs:
       - prepare_pytest_environment
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_task/test_wigtobigwig_input.json test_wigtobigwig
+            test/add_docker_image_tag_to_input.sh test/test_task/test_wigtobigwig_input.json test_wigtobigwig
             test/caper_run.sh test/test_task/test_wigtobigwig.wdl test/test_task/test_wigtobigwig_input.json
             python3 src/compare_md5.py --keys_to_inspect test_wigtobigwig.wigtobigwig.minus_strand_unique_bigwig \
             test_wigtobigwig.wigtobigwig.minus_strand_all_bigwig test_wigtobigwig.wigtobigwig.plus_strand_all_bigwig \
@@ -167,7 +167,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_workflow/test_workflow_input.json mirna_seq_pipeline
+            test/add_docker_image_tag_to_input.sh test/test_workflow/test_workflow_input.json mirna_seq_pipeline
             test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.star.plus_strand_unique_wig mirna_seq_pipeline.star.minus_strand_unique_wig \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
@@ -189,7 +189,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_workflow/test_workflow_2reps_input.json mirna_seq_pipeline
+            test/add_docker_image_tag_to_input.sh test/test_workflow/test_workflow_2reps_input.json mirna_seq_pipeline
             test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_2reps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
@@ -211,7 +211,7 @@ jobs:
       - run: *get_star_index
       - run:
           command: |
-            test/add_docker_image_to_input.sh test/test_workflow/test_workflow_techreps_input.json mirna_seq_pipeline
+            test/add_docker_image_tag_to_input.sh test/test_workflow/test_workflow_techreps_input.json mirna_seq_pipeline
             test/caper_run.sh mirna_seq_pipeline.wdl test/test_workflow/test_workflow_techreps_input.json
             python3 src/compare_md5.py --keys_to_inspect mirna_seq_pipeline.spearman_correlation.spearman_json \
             mirna_seq_pipeline.wigtobigwig.minus_strand_all_bigwig mirna_seq_pipeline.cutadapt.trimmed_fastq mirna_seq_pipeline.star.tsv \
