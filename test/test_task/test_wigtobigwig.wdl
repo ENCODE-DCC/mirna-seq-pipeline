@@ -19,7 +19,7 @@ workflow test_wigtobigwig {
     }
 
     RuntimeEnvironment runtime_environment = {
-      "docker": docker
+      "docker": docker,
       "singularity": ""
     }
 

@@ -17,7 +17,7 @@ workflow test_cutadapt {
     }
 
     RuntimeEnvironment runtime_environment = {
-      "docker": docker
+      "docker": docker,
       "singularity": ""
     }
 
