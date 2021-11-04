@@ -2,19 +2,13 @@
 
 To run the pipeline you need to install following software. Running the pipeline on Google Cloud requires additional setup detailed below.
 
-## Java 8
+## Java 11 or newer
 
 Java is required to run execution engine [Cromwell](https://software.broadinstitute.org/wdl/documentation/execution).
 To check which Java version you already have, run:
 ```bash
   $ java -version
 ```
-You are looking for 1.8 or higher. If the requirement is not fulfilled follow installation instructions for [mac](https://java.com/en/download/help/mac_install.xml) or
-[linux](http://openjdk.java.net/install/) or use your favorite installation method.
-
-## Cromwell
-
-Download WDL runner Cromwell from [here](https://github.com/broadinstitute/cromwell/releases). The pipeline has been tested using version 40.
 
 ## Docker
 
@@ -23,7 +17,7 @@ Follow instructions for [mac](https://docs.docker.com/docker-for-mac/install/) o
 
 ## Caper
 
-For running the pipeline we recommend using [Caper](https://github.com/ENCODE-DCC/caper) that wraps Cromwell in an easier to use package.
+For running the pipeline we recommend using [Caper](https://github.com/ENCODE-DCC/caper). Caper github page has extensive documentation on how to use caper on various platforms.
 
 ## croo
 
@@ -31,37 +25,22 @@ For organizing pipeline outputs we recommend using [croo](https://github.com/ENC
 
 ## Singularity
 
-If for some reason you cannot run Docker, install [singularity](https://www.sylabs.io/guides/3.1/user-guide/installation.html) and have a look at [HOWTO](howto.md#local-with-singularity) for an example of how to run pipeline with singularity. Pipeline requires singularity version `>=2.5.2`, the link takes you to version `3.1`.
+It is possible to use Singularity instead of Docker. For details on how to run pipeline using singularity see [instructions](https://github.com/ENCODE-DCC/caper/blob/master/DETAILS.md#singularity).
 
 ## Google Cloud
 
-If you are intending to run the pipeline on Google Cloud platform, the following setup is needed:
+To see how to run the pipeline on Google Cloud platform, see [instructions](https://github.com/ENCODE-DCC/caper/blob/master/scripts/gcp_caper_server/README.md).
 
-1. Sign up for a Google account.
-2. Go to [Google Project](https://console.developers.google.com/project) page and click "SIGN UP FOR FREE TRIAL" on the top left and agree to terms.
-3. Set up a payment method and click "START MY FREE TRIAL".
-4. Create a [Google Project](https://console.developers.google.com/project) `[YOUR_PROJECT_NAME]` and choose it on the top of the page.
-5. Create a [Google Cloud Storage bucket](https://console.cloud.google.com/storage/browser) `gs://[YOUR_BUCKET_NAME]` by clicking on a button "CREATE BUCKET" and create it to store pipeline outputs.
-6. Find and enable following APIs in your [API Manager](https://console.developers.google.com/apis/library). Click a back button on your web brower after enabling each.
-    * Compute Engine API
-    * Google Cloud Storage
-    * Google Cloud Storage JSON API
-    * Genomics API
+## AWS
 
-7. Install [Google Cloud Platform SDK](https://cloud.google.com/sdk/downloads) and authenticate through it. You will be asked to enter verification keys. Get keys from the URLs they provide.
-    ```
-      $ gcloud auth login --no-launch-browser
-      $ gcloud auth application-default login --no-launch-browser
-    ```
+To see how to run the pipeline on AWS, see [instructions](https://github.com/ENCODE-DCC/caper/blob/master/scripts/aws_caper_server/README.md).
 
-8. If you see permission errors at runtime, then unset environment variable `GOOGLE_APPLICATION_CREDENTIALS` or add it to your BASH startup scripts (`$HOME/.bashrc` or `$HOME/.bash_profile`).
-    ```
-      unset GOOGLE_APPLICATION_CREDENTIALS
-    ```
+## HPC 
 
-9. Set your default Google Cloud Project. Pipeline will provision instances on this project.
-    ```
-      $ gcloud config set project [YOUR_PROJECT_NAME]
-    ```
+To see how to run the pipeline on a HPC cluster, see [instructions](https://github.com/ENCODE-DCC/caper#running-pipelines-on-hpcs)
 
-* For an example on how to run the pipeline on Google Cloud, see [HOWTO](howto.md#google-cloud).
+## Truwl
+
+You can run this pipeline on [truwl.com](https://truwl.com/workflows/library/ENCODE%20Micro%20RNA-seq%20pipeline/v1.2.0). This provides a web interface that allows you to define inputs and parameters, run the job on GCP, and monitor progress in a ready-to-go environment. To run it you will need to create an account on the platform then request early access by emailing [info@truwl.com](mailto:info@truwl.com) to get the right permissions. You can see an example case [here](https://truwl.com/workflows/library/ENCODE%20Micro%20RNA-seq%20pipeline/v1.2.0/instances/WF_844a7e.de.5f29). The example job (or other jobs) can be forked to pre-populate the inputs for your own job.
+
+If you do not run the pipeline on Truwl, you can still share your use-case/job on the platform by getting in touch at [info@truwl.com](mailto:info@truwl.com) and providing your inputs.json file.
