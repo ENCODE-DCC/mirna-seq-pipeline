@@ -1,5 +1,0 @@
-{
-    "default_runtime_attributes": {
-        "docker": "encodedcc/mirna-seq-pipeline:1.2.2"
-    }
-}
