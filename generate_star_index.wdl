@@ -2,6 +2,8 @@ version 1.0
 
 # ENCODE micro rna seq pipeline: generate star index
 
+import "wdl/structs/runtime.wdl"
+
 workflow generate_STAR_index {
     meta {
         author: "Otto Jolanki"
@@ -20,7 +22,15 @@ workflow generate_STAR_index {
         Int ncpus
         Int ramGB
         String disks = "local-disk 50 SSD"
+        String docker = "encodedcc/mirna-seq-pipeline:1.2.2"
+        String singularity = "docker://encodedcc/mirna-seq-pipeline:1.2.2"
     }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": singularity
+    }
+                                
 
     call generate_index { input:
         genome_file=reference_sequence,
@@ -29,6 +39,7 @@ workflow generate_STAR_index {
         ncpus=ncpus,
         ramGB=ramGB,
         disks=disks,
+        runtime_environment=runtime_environment,
     }
 }
 
@@ -40,6 +51,7 @@ task generate_index {
         Int ncpus
         Int ramGB
         String disks
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -59,5 +71,7 @@ task generate_index {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disks
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

@@ -3,6 +3,8 @@ version 1.0
 # ENCODE micro rna seq pipeline: cutadapt subworkflow
 # Maintainer: Otto Jolanki
 
+import "wdl/structs/runtime.wdl"
+
 workflow cutadapt_wf {
     input {
         Array[File] fastqs_to_trim
@@ -12,6 +14,7 @@ workflow cutadapt_wf {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     scatter (i in range(length(fastqs_to_trim))) {
@@ -23,6 +26,7 @@ workflow cutadapt_wf {
             ncpus=ncpus,
             ramGB=ramGB,
             disk=disk,
+            runtime_environment=runtime_environment,
         }
     }
 
@@ -35,6 +39,7 @@ workflow cutadapt_wf {
             ncpus=ncpus,
             ramGB=ramGB,
             disk=disk,
+            runtime_environment=runtime_environment,
         }
 
     output {
@@ -54,6 +59,7 @@ task cutadapt {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -87,6 +93,8 @@ task cutadapt {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disk
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }
 
@@ -100,6 +108,7 @@ task merge_fastqs {
         Int ncpus
         Int ramGB
         String disk
+        RuntimeEnvironment runtime_environment
     }
 
     command {
@@ -120,5 +129,7 @@ task merge_fastqs {
         cpu: ncpus
         memory: "~{ramGB} GB"
         disks: disk
+        docker: runtime_environment.docker
+        singularity: runtime_environment.singularity
     }
 }

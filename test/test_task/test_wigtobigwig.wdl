@@ -15,6 +15,12 @@ workflow test_wigtobigwig {
         Int ncpus
         Int ramGB
         String disk
+        String docker
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": ""
     }
 
     call mirna.wigtobigwig { input:
@@ -26,6 +32,7 @@ workflow test_wigtobigwig {
         output_prefix =output_prefix,
         ncpus=ncpus,
         ramGB=ramGB,
-        disk=disk
+        disk=disk,
+        runtime_environment=runtime_environment,
     }
 }

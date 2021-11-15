@@ -5,10 +5,15 @@ This document contains more detailed information on the inputs, outputs and the 
 # CONTENTS
 
 [Software](reference.md#software)
+
 [Recommended Software](reference.md#recommended-software)
+
 [Inputs](reference.md#inputs)
+
 [Reference files](reference.md#getting-reference-files)
+
 [Outputs](reference.md#outputs)
+
 [Output organizer](reference.md#croo)
 
 ## Software

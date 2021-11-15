@@ -2,7 +2,7 @@ version 1.0
 
 # Test workflow for cutadapt task in ENCODE micro rna seq pipeline
 
-import "cutadapt_subworkflow.wdl" as cutadapt
+import "../../cutadapt_subworkflow.wdl" as cutadapt
 
 workflow test_cutadapt {
     input {
@@ -13,6 +13,12 @@ workflow test_cutadapt {
         Int ncpus
         Int ramGB
         String disk
+        String docker
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": ""
     }
 
     call cutadapt.cutadapt { input:
@@ -23,5 +29,6 @@ workflow test_cutadapt {
         ncpus=ncpus,
         ramGB=ramGB,
         disk=disk,
+        runtime_environment=runtime_environment,
     }
 }

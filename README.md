@@ -10,10 +10,6 @@ INSTALLATION
 -------------
 Installation instructions [here](docs/installation.md)
 
-HOWTO
-------
-Howto guides [here](docs/howto.md)
-
 INPUTS
 --------
 Description of the pipeline [inputs](docs/reference.md#inputs)

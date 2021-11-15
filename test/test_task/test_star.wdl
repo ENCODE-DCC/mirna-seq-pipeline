@@ -13,6 +13,12 @@ workflow test_star {
         Int ncpus
         Int ramGB
         String disk
+        String docker
+    }
+
+    RuntimeEnvironment runtime_environment = {
+      "docker": docker,
+      "singularity": ""
     }
 
     call mirna.star { input:
@@ -22,7 +28,8 @@ workflow test_star {
         output_prefix=output_prefix,
         ncpus=ncpus,
         ramGB=ramGB,
-        disk=disk
+        disk=disk,
+        runtime_environment=runtime_environment,
     }
 
     call mirna.bamtosam { input:
@@ -30,6 +37,7 @@ workflow test_star {
         output_sam=output_prefix + ".sam",
         ncpus=ncpus,
         ramGB=ramGB,
-        disk=disk
+        disk=disk,
+        runtime_environment=runtime_environment,
     }
 }
