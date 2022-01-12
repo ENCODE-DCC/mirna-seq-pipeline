@@ -12,6 +12,7 @@ workflow mirna_seq_pipeline {
         caper_docker: "encodedcc/mirna-seq-pipeline:1.2.2"
         caper_singularity: "docker://encodedcc/mirna-seq-pipeline:1.2.2"
         croo_out_def: "https://storage.googleapis.com/encode-pipeline-output-definition/mirna.output_definition.json"
+        description: "ENCODE Micro-RNA pipeline, see https://github.com/ENCODE-DCC/mirna-seq-pipeline for details."
     }
 
     input {
